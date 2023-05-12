@@ -10,6 +10,7 @@ public class Juego extends InterfaceJuego
 	private Entorno entorno;
 	
 	// Variables y métodos propios de cada grupo
+	private Nave miNave;
 	// ...
 	
 	Juego()
@@ -18,6 +19,8 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Lost Galaxian - Grupo ... - v1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
+		this.miNave = new Nave(400, 500, 60, 80);
+		
 		// ...
 
 		// Inicia el juego!
@@ -33,6 +36,25 @@ public class Juego extends InterfaceJuego
 	public void tick()
 	{
 		// Procesamiento de un instante de tiempo
+		miNave.dibujarNave(entorno);
+		
+		//Movimiento
+		// public final char TECLA_D = 68; FALTA
+		//public final char TECLA_A = 65; FALTA
+		if (this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)
+				&& this.miNave.getX() + this.miNave.getAncho() / 2 < this.entorno.ancho()) {
+			this.miNave.moverDerecha();
+		}
+		
+		if (this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)
+				&& this.miNave.getX() - this.miNave.getAncho() / 2 > 0) {
+			this.miNave.moverIzquierda();
+		}
+		
+		
+		
+		
+		
 		// ...
 		
 
