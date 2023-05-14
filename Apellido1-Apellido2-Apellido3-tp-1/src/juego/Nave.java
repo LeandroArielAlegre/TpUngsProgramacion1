@@ -22,7 +22,7 @@ public class Nave {
 	
 	// Dibuja la nave
 	void dibujarNave(Entorno entorno) {
-		entorno.dibujarTriangulo(this.x, this.y, this.ancho, this.alto, 55, Color.BLUE);
+		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.BLUE);
 		
 	}
 	
@@ -35,8 +35,7 @@ public class Nave {
 		 this.x=this.x - this.velocidad;
 	 }
 	 
-	 //public final char TECLA_D = 68;
-	//public final char TECLA_A = 65;
+	
 	 
 	 //Getters y Setters
 	 public int getX() {
