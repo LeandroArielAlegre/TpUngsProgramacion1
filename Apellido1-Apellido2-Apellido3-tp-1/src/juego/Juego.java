@@ -2,6 +2,9 @@ package juego;
 
 
 import entorno.Entorno;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.util.Random;
 import entorno.InterfaceJuego;
 
@@ -14,6 +17,7 @@ public class Juego extends InterfaceJuego
 	private Nave miNave;
 	private Asteroides[] miAsteroide1;
 	private Asteroides miAsteroide2;
+
 
 
 	
@@ -31,8 +35,9 @@ public class Juego extends InterfaceJuego
 		
 		
 		// Asteroides
-		this.miAsteroide1 = RespawnAsteroides(6); //Inicializa n cantidad de Asteroides en pantalla
+		//this.miAsteroide1 = RespawnAsteroides(6); //Inicializa n cantidad de Asteroides en pantalla
 												  // nos devuelve un array de asteroides
+		this.miAsteroide1= Asteroides.ListaAsteroides(6);
 
 		
 
@@ -52,12 +57,7 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		miNave.dibujarNave(this.entorno);
-		
-		for (int i= 0; i< this.miAsteroide1.length; i++) {  //Dibuja n de cantidad de asteroides
-			this.miAsteroide2 = this.miAsteroide1[i];
-			miAsteroide2.dibujarAsteroide(this.entorno);
-			miAsteroide2.mover();
-		}
+		dibujarAsteroides();
 		
 		
 		//Movimiento
@@ -74,14 +74,24 @@ public class Juego extends InterfaceJuego
 		}
 		
 		
-
+		//Colisiones:
+		if (this.miAsteroide2.getY() == this.miNave.getY()) { // test si andaba
+			System.out.println("a");
+		}
+		
 		
 		
 		
 		//Reaparicion de Asteroides
 
 		if(this.miAsteroide2.getY() > this.entorno.alto() ||this.miAsteroide2.getX()> entorno.ancho()){
-			System.out.println("sali del mapa");
+			this.miAsteroide1= Asteroides.ListaAsteroides(6);
+			dibujarAsteroides();
+			
+		
+		
+			
+			
 		}
 		// ...
 		
@@ -90,29 +100,22 @@ public class Juego extends InterfaceJuego
 	
 	// FUNCION A MEJORAR
 	
-	//Devuelve un array de n asteroides, se determina la direccion de caida en diagonal (izquierda/derecha)
-	private Asteroides[] RespawnAsteroides(int a) { //Aparicion de Asteroides 
-		Asteroides[] asteroide = new Asteroides[a] ;
-		for (int i = 0; i<a; i++) {
-			 Random rand = new Random();
-			 int x;
-			 if (i %2 ==0) {
-				  x = rand.nextInt(350,650);
-			 }else {
-				  x = rand.nextInt(200,250);
-			 }
-			 
-	         int y = -50;
-	         int radio = 20;
-	         int direccion = i % 2 == 0 ? 1 : -1;
-			asteroide[i] = new Asteroides(x,y, radio,direccion);
-			
-			
+	
+	
+	
+	private void dibujarAsteroides() {        //DIBUJA LOS ASTEROIDES
+		int contador1 = 0;
+		while(contador1< this.miAsteroide1.length) {
+			this.miAsteroide2 = this.miAsteroide1[contador1];
+			miAsteroide2.dibujarAsteroide(this.entorno);
+			miAsteroide2.mover();
+			contador1++;
 		}
-		return asteroide;
-		
 		
 	}
+	
+	
+	//Colision Asteroides a Astro-MegaShip
 	
 	
 
