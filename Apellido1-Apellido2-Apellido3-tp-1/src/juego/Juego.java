@@ -20,6 +20,8 @@ public class Juego extends InterfaceJuego
 	private Asteroides Asteroide3;
 	private Asteroides Asteroide4;
 	private Asteroides[] listaAsteroides;
+	private Proyectil Cohete;
+	
    
 
 
@@ -35,12 +37,12 @@ public class Juego extends InterfaceJuego
 		
 		// Inicializar lo que haga falta para el juego
 		this.miNave = new Nave(400, 500, 60, 80);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1);
+		
 		
 		
 		// Asteroides
-		//this.miAsteroide1 = RespawnAsteroides(6); //Inicializa n cantidad de Asteroides en pantalla
-												  // nos devuelve un array de asteroides
-		//this.miAsteroide1= Asteroides.ListaAsteroides(4);
+		
 		
 		this.Asteroide1 = new Asteroides(300,500, 20, 1);
 		this.Asteroide2 = new Asteroides(300,300, 20, 1);
@@ -66,8 +68,9 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		miNave.dibujarNave(this.entorno);
+		this.Cohete.dibujarProyectil(entorno);
 		
-		for(int i= 0; i <listaAsteroides.length;i++) {
+		for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
 			this.listaAsteroides[i].dibujarAsteroide(entorno);
 		}
 		
@@ -130,9 +133,11 @@ public class Juego extends InterfaceJuego
 		
 		//Disparo
 		if(this.entorno.sePresiono(this.entorno.TECLA_ESPACIO)) {
-			this.miNave.DibujarDisparo(this.entorno);
+			this.Cohete.mover();
+			
+			
 		}
-		
+		    
 		
 	
 		
@@ -155,7 +160,11 @@ public class Juego extends InterfaceJuego
 	
 	//Colision Asteroides a Astro-MegaShip
 	
-	private boolean RebotarAsteroide(Asteroides miAsteroide) {
+	
+	
+	
+	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
+	private boolean RebotarAsteroide(Asteroides miAsteroide) { // Recibe un Objeto Asteroide y lo hace rebotar
 
 		
 		boolean ReboteTop = miAsteroide.getY() > this.entorno.alto();

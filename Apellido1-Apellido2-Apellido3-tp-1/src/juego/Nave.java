@@ -35,12 +35,7 @@ public class Nave {
 		 this.x=this.x - this.velocidad;
 	 }
 	 
-	 void DibujarDisparo(Entorno entorno) {
-		 int DisparoX = this.x;
-		 int DisparoY = this.y;
-		 entorno.dibujarRectangulo(DisparoX, DisparoY, 30, 20, 0, Color.RED);
-		 
-	 }
+	 
 	 
 	 
 	
