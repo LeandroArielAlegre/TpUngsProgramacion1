@@ -15,9 +15,12 @@ public class Juego extends InterfaceJuego
 	
 	// Variables y métodos propios de cada grupo
 	private Nave miNave;
-	private Asteroides[] miAsteroide1;
-	private Asteroides miAsteroide2;
-
+	private Asteroides Asteroide1;
+	private Asteroides Asteroide2;
+	private Asteroides Asteroide3;
+	private Asteroides Asteroide4;
+	private Asteroides[] listaAsteroides;
+   
 
 
 	
@@ -37,8 +40,14 @@ public class Juego extends InterfaceJuego
 		// Asteroides
 		//this.miAsteroide1 = RespawnAsteroides(6); //Inicializa n cantidad de Asteroides en pantalla
 												  // nos devuelve un array de asteroides
-		this.miAsteroide1= Asteroides.ListaAsteroides(4);
-
+		//this.miAsteroide1= Asteroides.ListaAsteroides(4);
+		
+		this.Asteroide1 = new Asteroides(300,500, 20, 1);
+		this.Asteroide2 = new Asteroides(300,300, 20, 1);
+		this.Asteroide3 = new Asteroides(520,300, 20, -1);
+		this.Asteroide4 = new Asteroides(100,200, 20, -1);
+		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
+		
 		
 
 		// ...
@@ -57,9 +66,55 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		miNave.dibujarNave(this.entorno);
-		dibujarAsteroides();
+		
+		for(int i= 0; i <listaAsteroides.length;i++) {
+			this.listaAsteroides[i].dibujarAsteroide(entorno);
+		}
 		
 		
+
+		// Mover asteroides y verificar colisión
+		for (int i= 0; i <listaAsteroides.length;i++) {
+			this.listaAsteroides[i].mover();
+		    if (RebotarAsteroide(this.listaAsteroides[i])) {
+		    	this.listaAsteroides[i].InvertirMovimiento();
+		    }
+		}
+		
+		/*this.Asteroide1.dibujarAsteroide(this.entorno);
+		this.Asteroide2.dibujarAsteroide(this.entorno);
+		this.Asteroide3.dibujarAsteroide(this.entorno);
+		this.Asteroide4.dibujarAsteroide(this.entorno);
+		
+		
+		//Movimiento Asteroides
+		this.Asteroide1.mover();
+		this.Asteroide2.mover();
+		this.Asteroide3.mover();
+		this.Asteroide4.mover();
+		
+		
+		if(RebotarAsteroide(this.Asteroide1)){
+			this.Asteroide1.InvertirMovimiento();
+			
+		}
+		
+		if(RebotarAsteroide(this.Asteroide2)){
+			this.Asteroide2.InvertirMovimiento();
+			
+		}
+		
+		if(RebotarAsteroide(this.Asteroide3)){
+			this.Asteroide3.InvertirMovimiento();
+			
+		}
+		if(RebotarAsteroide(this.Asteroide4)){
+			this.Asteroide4.InvertirMovimiento();
+			
+		}*/
+		
+		
+	
 		//Movimiento
 		// public final char TECLA_D = 68; FALTA
 		//public final char TECLA_A = 65; FALTA
@@ -79,49 +134,42 @@ public class Juego extends InterfaceJuego
 		}
 		
 		
-		
-		//Colisiones:
-		if (this.miAsteroide2.getY() == this.miNave.getY()) { // test si andaba
-			System.out.println("a");
-		}
+	
 		
 		
 		
 		
-		//Reaparicion de Asteroides
-
-		if(this.miAsteroide2.getY() > this.entorno.alto() ||this.miAsteroide2.getX()> entorno.ancho()){
-			this.miAsteroide1= Asteroides.ListaAsteroides(6);
-			dibujarAsteroides();
-			
+		
 		
 		
 			
 			
-		}
+		
 		// ...
 		
 
 	}
 	
-	// FUNCION A MEJORAR
 	
 	
 	
+	//Colision Asteroides a Astro-MegaShip
 	
-	private void dibujarAsteroides() {        //DIBUJA LOS ASTEROIDES
-		int contador1 = 0;
-		while(contador1< this.miAsteroide1.length) {
-			this.miAsteroide2 = this.miAsteroide1[contador1];
-			miAsteroide2.dibujarAsteroide(this.entorno);
-			miAsteroide2.mover();
-			contador1++;
-		}
+	private boolean RebotarAsteroide(Asteroides miAsteroide) {
+
+		
+		boolean ReboteTop = miAsteroide.getY() > this.entorno.alto();
+		boolean ReboteBottom = miAsteroide.getY() < 0;
+		
+		
+		return   ReboteTop || ReboteBottom  ;
+		
 		
 	}
 	
 	
-	//Colision Asteroides a Astro-MegaShip
+
+
 	
 	
 

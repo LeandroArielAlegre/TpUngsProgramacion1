@@ -31,29 +31,12 @@ public class Asteroides {
 		this.x = this.x - direccion;
 	}
 
-	public static Asteroides[] ListaAsteroides(int a) { //Aparicion de Asteroides 
-		Asteroides[] asteroide = new Asteroides[a] ;    //Inicializa n cantidad de Asteroides en pantalla
-		for (int i = 0; i<a; i++) {                     // nos devuelve un array de asteroides
-			 Random rand = new Random();
-			 int x;
-			 if (i %2 ==0) {
-				  x = rand.nextInt(350,650);
-			 }else {
-				  x = rand.nextInt(200,250);
-			 }
-			 
-	         int y = i % 2 == 0 ? -50 : -20;
-	         int radio = 20;
-	         int direccion = i % 2 == 0 ? 1 : -1;
-			asteroide[i] = new Asteroides(x,y, radio,direccion);
-			
-			
-		}
-		return asteroide;
+	public void InvertirMovimiento() {
+		this.velocidad = (-velocidad);
+		this.direccion =(-direccion);
+				
 	}
-	
-	
-	
+
 
 	
 	
