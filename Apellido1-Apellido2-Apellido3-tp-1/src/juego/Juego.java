@@ -37,7 +37,7 @@ public class Juego extends InterfaceJuego
 		// Asteroides
 		//this.miAsteroide1 = RespawnAsteroides(6); //Inicializa n cantidad de Asteroides en pantalla
 												  // nos devuelve un array de asteroides
-		this.miAsteroide1= Asteroides.ListaAsteroides(6);
+		this.miAsteroide1= Asteroides.ListaAsteroides(4);
 
 		
 
@@ -72,6 +72,12 @@ public class Juego extends InterfaceJuego
 				&& this.miNave.getX() - this.miNave.getAncho() / 2 > 0) {
 			this.miNave.moverIzquierda();
 		}
+		
+		//Disparo
+		if(this.entorno.sePresiono(this.entorno.TECLA_ESPACIO)) {
+			this.miNave.DibujarDisparo(this.entorno);
+		}
+		
 		
 		
 		//Colisiones:
