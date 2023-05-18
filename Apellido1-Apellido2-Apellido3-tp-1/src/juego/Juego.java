@@ -21,6 +21,7 @@ public class Juego extends InterfaceJuego
 	private Asteroides Asteroide4;
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
+	private boolean Disparado;
 	
    
 
@@ -38,6 +39,7 @@ public class Juego extends InterfaceJuego
 		// Inicializar lo que haga falta para el juego
 		this.miNave = new Nave(400, 500, 60, 80);
 		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1);
+		this.Disparado = true;
 		
 		
 		
@@ -83,73 +85,45 @@ public class Juego extends InterfaceJuego
 		    	this.listaAsteroides[i].InvertirMovimiento();
 		    }
 		}
-		
-		/*this.Asteroide1.dibujarAsteroide(this.entorno);
-		this.Asteroide2.dibujarAsteroide(this.entorno);
-		this.Asteroide3.dibujarAsteroide(this.entorno);
-		this.Asteroide4.dibujarAsteroide(this.entorno);
-		
-		
-		//Movimiento Asteroides
-		this.Asteroide1.mover();
-		this.Asteroide2.mover();
-		this.Asteroide3.mover();
-		this.Asteroide4.mover();
-		
-		
-		if(RebotarAsteroide(this.Asteroide1)){
-			this.Asteroide1.InvertirMovimiento();
 			
-		}
-		
-		if(RebotarAsteroide(this.Asteroide2)){
-			this.Asteroide2.InvertirMovimiento();
-			
-		}
-		
-		if(RebotarAsteroide(this.Asteroide3)){
-			this.Asteroide3.InvertirMovimiento();
-			
-		}
-		if(RebotarAsteroide(this.Asteroide4)){
-			this.Asteroide4.InvertirMovimiento();
-			
-		}*/
-		
-		
-	
 		//Movimiento
 		// public final char TECLA_D = 68; FALTA
 		//public final char TECLA_A = 65; FALTA
 		if (this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)
 				&& this.miNave.getX() + this.miNave.getAncho() / 2 < this.entorno.ancho()) {
 			this.miNave.moverDerecha();
+			if(this.Cohete.getY() > 0 && Disparado) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
+				this.Cohete.setX(this.miNave.getX());
+				this.Cohete.setY(this.miNave.getY());
+			}
 		}
 		
 		if (this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)
 				&& this.miNave.getX() - this.miNave.getAncho() / 2 > 0) {
 			this.miNave.moverIzquierda();
+			if(this.Cohete.getY() > 0  && Disparado) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
+				this.Cohete.setX(this.miNave.getX());
+				this.Cohete.setY(this.miNave.getY());
+			}
 		}
 		
 		//Disparo
-		if(this.entorno.sePresiono(this.entorno.TECLA_ESPACIO)) {
-			this.Cohete.mover();
-			
+		if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
+			this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
+			this.Disparado = false; // este boolean axuliar se pone en false
 			
 		}
+			
+			
+			if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
+				this.Disparado = true;
+				this.Cohete =null; // el objeto se elimina
+				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+				
+				
+			}
 		    
-		
-	
-		
-		
-		
-		
-		
-		
-		
-			
-			
-		
+
 		// ...
 		
 
