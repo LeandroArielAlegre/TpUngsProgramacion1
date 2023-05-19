@@ -2,9 +2,11 @@ package juego;
 
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.util.Random;
 import entorno.InterfaceJuego;
 
@@ -24,6 +26,7 @@ public class Juego extends InterfaceJuego
 	private boolean Disparado;
 	private int vida;
 	private boolean conVidas = true;
+	Image gameover;
 	
    
 
@@ -55,6 +58,11 @@ public class Juego extends InterfaceJuego
 		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
 		
 		
+		//imagenes
+		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
+		
+		//vidas
+		
 
 		// ...
 
@@ -71,58 +79,80 @@ public class Juego extends InterfaceJuego
 	public void tick()
 	{
 		
-		// Procesamiento de un instante de tiempo
-		miNave.dibujarNave(this.entorno);
-		MovimientodeNave();
-		this.Cohete.dibujarProyectil(entorno);
-		
-		for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
-			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
-				this.listaAsteroides[i].dibujarAsteroide(entorno);
-			}
+		if (this.conVidas) {
+			// Procesamiento de un instante de tiempo
+			miNave.dibujarNave(this.entorno);
+			MovimientodeNave();
+			this.Cohete.dibujarProyectil(entorno);
 			
-		}
+			for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
+				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+					this.listaAsteroides[i].dibujarAsteroide(entorno);
+				}
+				
+			}
 
-		// Mover asteroides y verificar colisión con la pantalla
-		for (int i= 0; i <listaAsteroides.length;i++) {
-			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
-				this.listaAsteroides[i].mover();
-			    if (RebotarAsteroide(this.listaAsteroides[i])) {
-			    	this.listaAsteroides[i].InvertirMovimiento();
-			    }
+			// Mover asteroides y verificar colisión con la pantalla
+			for (int i= 0; i <listaAsteroides.length;i++) {
+				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+					this.listaAsteroides[i].mover();
+				    if (RebotarAsteroide(this.listaAsteroides[i])) {
+				    	this.listaAsteroides[i].InvertirMovimiento();
+				    }
+					
+				}
 				
 			}
+				
+			//Movimiento
+			// public final char TECLA_D = 68; FALTA
+			//public final char TECLA_A = 65; FALTA
+			
+			//Disparo
+			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
+				this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
+				this.Disparado = false; // este boolean axuliar se pone en false
+				
+			}
+				
+				
+				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
+					this.Disparado = true;
+					this.Cohete =null; // el objeto se elimina
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+					
+					
+				}
+				
+			//Colision cohete a asteroide	
+			colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
+				
+				//Colision Asteroides a Astro-MegaShip
+			if(colisionaAsteroideNave(listaAsteroides)) {
+				System.out.println("¡La nave a recibido un impacto!");
+				this.conVidas = false;
+				
+				
+					
+				}
+			
 			
 		}
-			
-		//Movimiento
-		// public final char TECLA_D = 68; FALTA
-		//public final char TECLA_A = 65; FALTA
 		
-		//Disparo
-		if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
-			this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
-			this.Disparado = false; // este boolean axuliar se pone en false
-			
+		//Dibuja una pantalla al morir y al presionar espacio se detiene el programa
+		if(this.conVidas != true) {
+			PantallaFinal();
+			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO)) {
+				System.exit(0);
+				}
 		}
-			
-			
-			if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
-				this.Disparado = true;
-				this.Cohete =null; // el objeto se elimina
-				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
-				
-				
-			}
-			
-			//Colision Asteroides a Astro-MegaShip
-		if(colisionaAsteroideNave(listaAsteroides)) {
-			System.out.println("ME PEGARON ");
-				
-			}
-		colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
+		
+		
+		
 		
 		    
+		
+		
 
 		// ...
 		
@@ -219,6 +249,16 @@ public class Juego extends InterfaceJuego
 		}
 		
 		
+	}
+	
+	
+	public void PantallaFinal() {
+		this.entorno.dibujarImagen(gameover,400,300,0);
+		this.entorno.cambiarFont(Font.DIALOG, 40, Color.RED);
+		this.entorno.escribirTexto("PERDISTE",310,150);
+		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
+		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
+		this.entorno.escribirTexto(" { PRESIONE ESPACIO PARA SALIR } ",120,550);
 	}
 	
 
