@@ -77,15 +77,22 @@ public class Juego extends InterfaceJuego
 		this.Cohete.dibujarProyectil(entorno);
 		
 		for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
-			this.listaAsteroides[i].dibujarAsteroide(entorno);
+			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+				this.listaAsteroides[i].dibujarAsteroide(entorno);
+			}
+			
 		}
 
 		// Mover asteroides y verificar colisión con la pantalla
 		for (int i= 0; i <listaAsteroides.length;i++) {
-			this.listaAsteroides[i].mover();
-		    if (RebotarAsteroide(this.listaAsteroides[i])) {
-		    	this.listaAsteroides[i].InvertirMovimiento();
-		    }
+			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+				this.listaAsteroides[i].mover();
+			    if (RebotarAsteroide(this.listaAsteroides[i])) {
+			    	this.listaAsteroides[i].InvertirMovimiento();
+			    }
+				
+			}
+			
 		}
 			
 		//Movimiento
@@ -130,12 +137,16 @@ public class Juego extends InterfaceJuego
         // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
 		
 		for(int i=0; i< asteroide.length;i++) {
-			if (this.miNave.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
-	        		this.miNave.getX() + this.miNave.getAncho() > asteroide[i].getX() &&
-	            this.miNave.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
-	            this.miNave.getY() + this.miNave.getAlto() > asteroide[i].getY()) {
-	            return true; // Hay una colisión
-	        }
+			if(this.listaAsteroides[i] !=null) { // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+				if (this.miNave.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
+		        		this.miNave.getX() + this.miNave.getAncho() > asteroide[i].getX() &&
+		            this.miNave.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
+		            this.miNave.getY() + this.miNave.getAlto() > asteroide[i].getY()) {
+		            return true; // Hay una colisión
+		        }
+				
+				
+			}
 			
 		}
         
@@ -146,14 +157,18 @@ public class Juego extends InterfaceJuego
         // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
 		
 		for(int i=0; i< asteroide.length;i++) {
-			if (cohete.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
-	        		cohete.getX() + cohete.getAncho() > asteroide[i].getX() &&
-	            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
-	            cohete.getY() + cohete.getAlto() > asteroide[i].getY()) {
-	            asteroide[i] = null;
-	           
-	             // Hay una colisión
-	        }
+			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+				if (cohete.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
+		        		cohete.getX() + cohete.getAncho() > asteroide[i].getX() &&
+		            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
+		            cohete.getY() + cohete.getAlto() > asteroide[i].getY()) {
+		            asteroide[i] = null;
+		           
+		             // Hay una colisión
+		        }
+				
+				
+			}
 			
 		}
         
