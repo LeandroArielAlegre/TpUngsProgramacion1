@@ -39,6 +39,16 @@ public class Proyectil {
 	public void setX(int x) {
 		this.x= x;
 	}
+
+	public int getAncho() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getAlto() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
 
 

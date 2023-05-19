@@ -22,6 +22,8 @@ public class Juego extends InterfaceJuego
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
 	private boolean Disparado;
+	private int vida;
+	private boolean conVidas = true;
 	
    
 
@@ -37,7 +39,7 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Lost Galaxian - Grupo ... - v1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		this.miNave = new Nave(400, 500, 60, 80);
+		this.miNave = new Nave(400, 500, 40, 40);
 		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1);
 		this.Disparado = true;
 		
@@ -68,17 +70,17 @@ public class Juego extends InterfaceJuego
 	 */
 	public void tick()
 	{
+		
 		// Procesamiento de un instante de tiempo
 		miNave.dibujarNave(this.entorno);
+		MovimientodeNave();
 		this.Cohete.dibujarProyectil(entorno);
 		
 		for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
 			this.listaAsteroides[i].dibujarAsteroide(entorno);
 		}
-		
-		
 
-		// Mover asteroides y verificar colisión
+		// Mover asteroides y verificar colisión con la pantalla
 		for (int i= 0; i <listaAsteroides.length;i++) {
 			this.listaAsteroides[i].mover();
 		    if (RebotarAsteroide(this.listaAsteroides[i])) {
@@ -89,6 +91,100 @@ public class Juego extends InterfaceJuego
 		//Movimiento
 		// public final char TECLA_D = 68; FALTA
 		//public final char TECLA_A = 65; FALTA
+		
+		//Disparo
+		if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
+			this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
+			this.Disparado = false; // este boolean axuliar se pone en false
+			
+		}
+			
+			
+			if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
+				this.Disparado = true;
+				this.Cohete =null; // el objeto se elimina
+				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+				
+				
+			}
+			
+			//Colision Asteroides a Astro-MegaShip
+		if(colisionaAsteroideNave(listaAsteroides)) {
+			System.out.println("ME PEGARON ");
+				
+			}
+		colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
+		
+		    
+
+		// ...
+		
+
+	}
+	
+	
+	
+	
+	//Colision Asteroides a Astro-MegaShip //REVISAR
+	public boolean colisionaAsteroideNave(Asteroides[] asteroide) {
+        // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
+		
+		for(int i=0; i< asteroide.length;i++) {
+			if (this.miNave.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
+	        		this.miNave.getX() + this.miNave.getAncho() > asteroide[i].getX() &&
+	            this.miNave.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
+	            this.miNave.getY() + this.miNave.getAlto() > asteroide[i].getY()) {
+	            return true; // Hay una colisión
+	        }
+			
+		}
+        
+        return false; // No hay colisión
+    }
+	
+	public void colisionaAsteroideCohete(Asteroides[] asteroide, Proyectil cohete) {
+        // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
+		
+		for(int i=0; i< asteroide.length;i++) {
+			if (cohete.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
+	        		cohete.getX() + cohete.getAncho() > asteroide[i].getX() &&
+	            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
+	            cohete.getY() + cohete.getAlto() > asteroide[i].getY()) {
+	            asteroide[i] = null;
+	           
+	             // Hay una colisión
+	        }
+			
+		}
+        
+         // No hay colisión
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
+	private boolean RebotarAsteroide(Asteroides miAsteroide) { // Recibe un Objeto Asteroide y lo hace rebotar
+
+		
+		boolean ReboteTop = miAsteroide.getY() > this.entorno.alto();
+		boolean ReboteBottom = miAsteroide.getY() < 0;
+		
+		
+		return   ReboteTop || ReboteBottom  ;
+		
+		
+	}
+	
+	private void MovimientodeNave() { //CONTROL DE LA NAVE
 		if (this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)
 				&& this.miNave.getX() + this.miNave.getAncho() / 2 < this.entorno.ancho()) {
 			this.miNave.moverDerecha();
@@ -107,49 +203,8 @@ public class Juego extends InterfaceJuego
 			}
 		}
 		
-		//Disparo
-		if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
-			this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
-			this.Disparado = false; // este boolean axuliar se pone en false
-			
-		}
-			
-			
-			if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
-				this.Disparado = true;
-				this.Cohete =null; // el objeto se elimina
-				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
-				
-				
-			}
-		    
-
-		// ...
-		
-
-	}
-	
-	
-	
-	
-	//Colision Asteroides a Astro-MegaShip
-	
-	
-	
-	
-	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
-	private boolean RebotarAsteroide(Asteroides miAsteroide) { // Recibe un Objeto Asteroide y lo hace rebotar
-
-		
-		boolean ReboteTop = miAsteroide.getY() > this.entorno.alto();
-		boolean ReboteBottom = miAsteroide.getY() < 0;
-		
-		
-		return   ReboteTop || ReboteBottom  ;
-		
 		
 	}
-	
 	
 
 
