@@ -99,6 +99,10 @@ public class Juego extends InterfaceJuego
 			this.NaveEnemiga.dibujarNaveEnemiga(this.entorno);
 			if (this.entorno.alto()/4 > this.NaveEnemiga.getY()) {
 				this.NaveEnemiga.moverVertical();
+				if(this.entorno.alto()/2 > this.NaveEnemiga.getY()) {
+					this.NaveEnemiga.invertirDireccion();
+				}
+					
 				if(RebotarNave(this.NaveEnemiga)) {
 					this.NaveEnemiga.InvertirMovimiento();
 				}
@@ -235,7 +239,7 @@ public class Juego extends InterfaceJuego
 				if (cohete.getX() < asteroide[i].getX() + asteroide[i].getRadio() &&
 		        		cohete.getX() + cohete.getAncho() > asteroide[i].getX() &&
 		            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
-		            cohete.getY() + cohete.getAlto() > asteroide[i].getY()) {
+		            cohete.getY() + cohete.getAlto() > asteroide[i].getY() && cohete.getX() != this.miNave.getX() && cohete.getY() != this.miNave.getY() ) {
 		            asteroide[i] = null;
 		       
 		            
@@ -279,11 +283,9 @@ public class Juego extends InterfaceJuego
 	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
 		private boolean RebotarNave(navesDestructoras naveEnemiga) { // Recibe un Objeto Asteroide y lo hace rebotar
 
-			
 			boolean ReboteTop = naveEnemiga.getY() > this.entorno.alto();
 			boolean ReboteBottom = naveEnemiga.getY() < 0;
-			
-			
+		
 			return   ReboteTop || ReboteBottom  ;
 			
 			

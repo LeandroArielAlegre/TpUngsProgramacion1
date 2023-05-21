@@ -13,6 +13,7 @@ public class navesDestructoras {
 	private int direccion;
 	
 	
+	
 	navesDestructoras(int x, int y, int ancho, int alto){
 		this.x = x;
 		this.y = y;
@@ -46,6 +47,9 @@ public class navesDestructoras {
 			this.velocidad = (-velocidad);
 			this.direccion =(-direccion);
 					
+		}
+		void invertirDireccion() {
+			this.direccion= (-direccion);
 		}
 		
 		
