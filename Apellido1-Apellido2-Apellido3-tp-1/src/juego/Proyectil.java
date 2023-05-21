@@ -22,8 +22,11 @@ public class Proyectil {
 		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , Color.red);
 	}
 		
-	public void mover() {
+	public void moverArriba() {
 		this.y -= this.velocidad;
+	}
+	public void moverAbajo() {
+		this.y += this.velocidad;
 	}
 	
 	public int getX() {

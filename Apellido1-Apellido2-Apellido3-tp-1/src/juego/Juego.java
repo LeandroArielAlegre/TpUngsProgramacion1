@@ -23,7 +23,10 @@ public class Juego extends InterfaceJuego
 	private Asteroides Asteroide4;
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
+	private Proyectil iones;
+	private navesDestructoras NaveEnemiga;
 	private boolean Disparado;
+	
 	private int vida;
 	private boolean conVidas = true;
 	Image gameover;
@@ -48,6 +51,7 @@ public class Juego extends InterfaceJuego
 		
 		
 		
+		
 		// Asteroides
 		
 		
@@ -57,6 +61,9 @@ public class Juego extends InterfaceJuego
 		this.Asteroide4 = new Asteroides(100,200, 20, -1);
 		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
 		
+		
+		// Destructores Estelares
+		this.NaveEnemiga = new navesDestructoras(450,50,40,40);
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
@@ -85,7 +92,31 @@ public class Juego extends InterfaceJuego
 			MovimientodeNave();
 			this.Cohete.dibujarProyectil(entorno);
 			
-			for(int i= 0; i <listaAsteroides.length;i++) {         // Dibuja los Asteroides
+			
+			
+			//Movimiento Nave enemiga
+			
+			this.NaveEnemiga.dibujarNaveEnemiga(this.entorno);
+			if (this.entorno.alto()/4 > this.NaveEnemiga.getY()) {
+				this.NaveEnemiga.moverVertical();
+				if(RebotarNave(this.NaveEnemiga)) {
+					this.NaveEnemiga.InvertirMovimiento();
+				}
+			}else {
+				this.NaveEnemiga.moverDiagonal();
+				if(RebotarNave(this.NaveEnemiga)) {
+					this.NaveEnemiga.InvertirMovimiento();
+				}
+				
+			}
+			
+			
+			
+				
+			
+			
+			// Dibuja los Asteroides
+			for(int i= 0; i <listaAsteroides.length;i++) {         
 				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
 					this.listaAsteroides[i].dibujarAsteroide(entorno);
 				}
@@ -110,10 +141,12 @@ public class Juego extends InterfaceJuego
 			
 			//Disparo
 			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
-				this.Cohete.mover(); //Cuando Se presiona el espacio el cohete sale disparado
+				this.Cohete.moverArriba(); //Cuando Se presiona el espacio el cohete sale disparado
 				this.Disparado = false; // este boolean axuliar se pone en false
 				
+				
 			}
+			
 				
 				
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
@@ -127,6 +160,12 @@ public class Juego extends InterfaceJuego
 			//Colision cohete a asteroide	
 			colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
 				
+				
+				
+				
+			
+			
+				
 				//Colision Asteroides a Astro-MegaShip
 			if(colisionaAsteroideNave(listaAsteroides)) {
 				System.out.println("¡La nave a recibido un impacto!");
@@ -138,6 +177,11 @@ public class Juego extends InterfaceJuego
 			
 			
 		}
+		
+		
+		
+		
+		
 		
 		//Dibuja una pantalla al morir y al presionar espacio se detiene el programa
 		if(this.conVidas != true) {
@@ -193,6 +237,8 @@ public class Juego extends InterfaceJuego
 		            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
 		            cohete.getY() + cohete.getAlto() > asteroide[i].getY()) {
 		            asteroide[i] = null;
+		       
+		            
 		           
 		             // Hay una colisión
 		        }
@@ -201,6 +247,7 @@ public class Juego extends InterfaceJuego
 			}
 			
 		}
+		
         
          // No hay colisión
     }
@@ -229,29 +276,51 @@ public class Juego extends InterfaceJuego
 		
 	}
 	
+	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
+		private boolean RebotarNave(navesDestructoras naveEnemiga) { // Recibe un Objeto Asteroide y lo hace rebotar
+
+			
+			boolean ReboteTop = naveEnemiga.getY() > this.entorno.alto();
+			boolean ReboteBottom = naveEnemiga.getY() < 0;
+			
+			
+			return   ReboteTop || ReboteBottom  ;
+			
+			
+		}
+	
 	private void MovimientodeNave() { //CONTROL DE LA NAVE
 		if (this.entorno.estaPresionada(this.entorno.TECLA_DERECHA)
 				&& this.miNave.getX() + this.miNave.getAncho() / 2 < this.entorno.ancho()) {
 			this.miNave.moverDerecha();
-			if(this.Cohete.getY() > 0 && Disparado) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
-				this.Cohete.setX(this.miNave.getX());
-				this.Cohete.setY(this.miNave.getY());
-			}
+			CoheteNave();
 		}
 		
 		if (this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA)
 				&& this.miNave.getX() - this.miNave.getAncho() / 2 > 0) {
 			this.miNave.moverIzquierda();
-			if(this.Cohete.getY() > 0  && Disparado) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
-				this.Cohete.setX(this.miNave.getX());
-				this.Cohete.setY(this.miNave.getY());
-			}
+			CoheteNave();
 		}
 		
+		
+		
+		
+	}
+	private void CoheteNave() {
+		if(this.Cohete.getY() > 0  && Disparado) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
+			this.Cohete.setX(this.miNave.getX());
+			this.Cohete.setY(this.miNave.getY());
+		}
 		
 	}
 	
 	
+	
+	//Metodos especiales de movimiento de los Destructores estelares:
+	
+	
+	
+	//DIBUJA LA PANTALLA FINAL DEL JUEGO
 	public void PantallaFinal() {
 		this.entorno.dibujarImagen(gameover,400,300,0);
 		this.entorno.cambiarFont(Font.DIALOG, 40, Color.RED);
