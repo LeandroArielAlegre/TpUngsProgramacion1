@@ -23,7 +23,11 @@ public class Juego extends InterfaceJuego
 	private Asteroides Asteroide4;
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
-	private Proyectil iones;
+	private Proyectil iones1;
+	private Proyectil iones2;
+	private Proyectil iones3;
+	private Proyectil iones4;
+	private Proyectil[] Listaiones;
 	private navesDestructoras NaveEnemiga1;
 	private navesDestructoras NaveEnemiga2;
 	private navesDestructoras NaveEnemiga3;
@@ -71,9 +75,14 @@ public class Juego extends InterfaceJuego
 		this.NaveEnemiga2 = new navesDestructoras(400,50,40,40,-1);
 		this.NaveEnemiga3 = new navesDestructoras(350,50,40,40,1);
 		this.NaveEnemiga4 = new navesDestructoras(250,50,40,40,-1);
-		this.iones = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),5,5,1);
 		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
 		
+		//Proyectiles de la nave enemiga
+		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),5,5,4);
+		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),5,5,4);
+		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),5,5,4);
+		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),5,5,4);
+		this.Listaiones= new Proyectil[] {this.iones1,this.iones2,this.iones3,this.iones4};
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
@@ -155,7 +164,39 @@ public class Juego extends InterfaceJuego
 				
 			}
 			*/
-			//Disparo navEnemiga
+			
+			// Dibuja los Asteroides
+			for(int i= 0; i <Listaiones.length;i++) {         
+				if(this.Listaiones[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+					this.Listaiones[i].dibujarProyectil(entorno);
+				}
+							
+				}
+			//Disparo naveEnemiga
+			
+			for(int i=0; i<Listaiones.length;i++) {
+				if (this.Listaiones[i].getY() != this.ListaNaves[i].getY()) {
+					this.Listaiones[i].moverAbajo(); 
+				
+				}
+				if (this.Listaiones[i].getY() == this.ListaNaves[i].getY()) {
+					this.Listaiones[i].setY(this.Listaiones[i].getY() +1); 
+				
+				}
+			
+					
+				if(this.Listaiones[i].getY()== this.entorno.alto()) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
+					this.Listaiones[i] =null; // el objeto se elimina
+					this.Listaiones[i] = new Proyectil (this.ListaNaves[i].getX(),this.ListaNaves[i].getY(),5,5,4); //se crea uno nuevo
+						
+						
+					}
+				
+			}
+			
+			
+			
+			
 			
 			
 			
