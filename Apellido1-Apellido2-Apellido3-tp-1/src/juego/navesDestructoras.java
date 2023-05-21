@@ -14,13 +14,13 @@ public class navesDestructoras {
 	
 	
 	
-	navesDestructoras(int x, int y, int ancho, int alto){
+	navesDestructoras(int x, int y, int ancho, int alto, int direccion){
 		this.x = x;
 		this.y = y;
 		this.alto = alto;
 		this.ancho = ancho;
 		this.velocidad = 1;
-		this.direccion= 1;
+		this.direccion= direccion;
 		
 		
 		

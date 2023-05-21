@@ -24,7 +24,11 @@ public class Juego extends InterfaceJuego
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
 	private Proyectil iones;
-	private navesDestructoras NaveEnemiga;
+	private navesDestructoras NaveEnemiga1;
+	private navesDestructoras NaveEnemiga2;
+	private navesDestructoras NaveEnemiga3;
+	private navesDestructoras NaveEnemiga4;
+	private navesDestructoras[] ListaNaves;
 	private boolean Disparado;
 	
 	private int vida;
@@ -63,7 +67,13 @@ public class Juego extends InterfaceJuego
 		
 		
 		// Destructores Estelares
-		this.NaveEnemiga = new navesDestructoras(450,50,40,40);
+		this.NaveEnemiga1 = new navesDestructoras(450,20,40,40,1);
+		this.NaveEnemiga2 = new navesDestructoras(400,50,40,40,-1);
+		this.NaveEnemiga3 = new navesDestructoras(350,50,40,40,1);
+		this.NaveEnemiga4 = new navesDestructoras(250,50,40,40,-1);
+		this.iones = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),5,5,1);
+		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
+		
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
@@ -94,25 +104,60 @@ public class Juego extends InterfaceJuego
 			
 			
 			
-			//Movimiento Nave enemiga
 			
-			this.NaveEnemiga.dibujarNaveEnemiga(this.entorno);
-			if (this.entorno.alto()/4 > this.NaveEnemiga.getY()) {
-				this.NaveEnemiga.moverVertical();
-				if(this.entorno.alto()/2 > this.NaveEnemiga.getY()) {
-					this.NaveEnemiga.invertirDireccion();
-				}
+			//Movimiento Nave enemiga
+			for (int i = 0; i< ListaNaves.length;i++) {
+				this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
+				if (this.entorno.alto()/4 > this.ListaNaves[i].getY()) {
+				
+					this.ListaNaves[i].moverVertical();
+					if(this.entorno.alto()/2 > this.ListaNaves[i].getY()) {
+						this.ListaNaves[i].invertirDireccion();
+						
+					}
+						
+					if(RebotarNave(this.ListaNaves[i])) {
+						this.ListaNaves[i].InvertirMovimiento();
+						
+					}
+				}else {
+					this.ListaNaves[i].moverDiagonal();
+					if(RebotarNave(this.ListaNaves[i])) {
+						this.ListaNaves[i].InvertirMovimiento();
+						
+						
+					}
 					
-				if(RebotarNave(this.NaveEnemiga)) {
-					this.NaveEnemiga.InvertirMovimiento();
-				}
-			}else {
-				this.NaveEnemiga.moverDiagonal();
-				if(RebotarNave(this.NaveEnemiga)) {
-					this.NaveEnemiga.InvertirMovimiento();
 				}
 				
 			}
+			/*
+			this.NaveEnemiga1.dibujarNaveEnemiga(this.entorno);
+			if (this.entorno.alto()/4 > this.NaveEnemiga1.getY()) {
+			
+				this.NaveEnemiga1.moverVertical();
+				if(this.entorno.alto()/2 > this.NaveEnemiga1.getY()) {
+					this.NaveEnemiga1.invertirDireccion();
+					
+				}
+					
+				if(RebotarNave(this.NaveEnemiga1)) {
+					this.NaveEnemiga1.InvertirMovimiento();
+					
+				}
+			}else {
+				this.NaveEnemiga1.moverDiagonal();
+				if(RebotarNave(this.NaveEnemiga1)) {
+					this.NaveEnemiga1.InvertirMovimiento();
+					
+					
+				}
+				
+			}
+			*/
+			//Disparo navEnemiga
+			
+			
 			
 			
 			
@@ -143,7 +188,7 @@ public class Juego extends InterfaceJuego
 			// public final char TECLA_D = 68; FALTA
 			//public final char TECLA_A = 65; FALTA
 			
-			//Disparo
+			//Disparo astro-megaship
 			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
 				this.Cohete.moverArriba(); //Cuando Se presiona el espacio el cohete sale disparado
 				this.Disparado = false; // este boolean axuliar se pone en false
@@ -315,6 +360,15 @@ public class Juego extends InterfaceJuego
 		}
 		
 	}
+	/*
+	private void IonesNave() {
+		if(this.iones.getY() > 0) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
+			this.iones.setX(this.NaveEnemiga1.getX());
+			this.iones.setY(this.NaveEnemiga1.getY());
+		}
+		
+	}*/
+	
 	
 	
 	
