@@ -38,6 +38,7 @@ public class Juego extends InterfaceJuego
 	private int vida;
 	private boolean conVidas = true;
 	Image gameover;
+	Image background;
 	
    
 
@@ -86,6 +87,7 @@ public class Juego extends InterfaceJuego
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
+		this.background=Herramientas.cargarImagen("imagenes/background.jpg");
 		
 		//vidas
 		
@@ -107,6 +109,7 @@ public class Juego extends InterfaceJuego
 		
 		if (this.conVidas) {
 			// Procesamiento de un instante de tiempo
+			this.entorno.dibujarImagen(background,400,300,0);
 			miNave.dibujarNave(this.entorno);
 			MovimientodeNave();
 			this.Cohete.dibujarProyectil(entorno);
@@ -240,7 +243,7 @@ public class Juego extends InterfaceJuego
 			}
 			
 				
-				
+			 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					this.Cohete =null; // el objeto se elimina
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
@@ -253,8 +256,6 @@ public class Juego extends InterfaceJuego
 				
 				
 				
-				
-			
 			
 				
 				//Colision Asteroides a Astro-MegaShip
