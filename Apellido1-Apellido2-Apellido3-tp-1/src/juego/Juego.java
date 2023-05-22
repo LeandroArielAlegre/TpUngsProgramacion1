@@ -173,25 +173,19 @@ public class Juego extends InterfaceJuego
 			//Disparo naveEnemiga
 			
 			for(int i=0; i<Listaiones.length;i++) {
-				if(this.Listaiones[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+				if(this.Listaiones[i]==null) {
+					generarIones(i);
+				}else {
+					this.Listaiones[i].moverAbajo();
 					this.Listaiones[i].dibujarProyectil(entorno);
 				}
-				if (this.Listaiones[i].getY() != this.ListaNaves[i].getY()) {
-					this.Listaiones[i].moverAbajo(); 
-				
+				if (this.Listaiones[i] != null) {
+				    if (this.Listaiones[i].getY() >= this.entorno.alto()) {
+				        this.Listaiones[i] = null;
+				    }
 				}
-				if (this.Listaiones[i].getY() == this.ListaNaves[i].getY()) {
-					this.Listaiones[i].setY(this.Listaiones[i].getY() +1); 
+
 				
-				}
-			
-					
-				if(this.Listaiones[i].getY()== this.entorno.alto()) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
-					this.Listaiones[i] =null; // el objeto se elimina
-					this.Listaiones[i] = new Proyectil (this.ListaNaves[i].getX(),this.ListaNaves[i].getY(),5,5,4); //se crea uno nuevo
-						
-						
-					}
 				
 			}
 			
@@ -403,14 +397,10 @@ public class Juego extends InterfaceJuego
 		}
 		
 	}
-	/*
-	private void IonesNave() {
-		if(this.iones.getY() > 0) { // El cohete nos sigue cuando nos movemos mientras no sea disparado
-			this.iones.setX(this.NaveEnemiga1.getX());
-			this.iones.setY(this.NaveEnemiga1.getY());
-		}
-		
-	}*/
+	
+	private void generarIones(int i) {
+	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 5, 5, 4);
+	}
 	
 	
 	
