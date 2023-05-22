@@ -10,16 +10,18 @@ public class Proyectil {
 	private int alto;
 	private int ancho;
 	private int velocidad;
-	public Proyectil(int x, int y, int alto, int ancho, int velocidad) {
+	private Color color;
+	public Proyectil(int x, int y, int alto, int ancho, int velocidad, Color color) {
 		this.x = x;
 		this.y = y;
 		this.alto = alto;
 		this.ancho = ancho;
 		this.velocidad = velocidad;
+		this.color = color;
 	}
 	
 	public void dibujarProyectil(Entorno entorno) {
-		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , Color.red);
+		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , color);
 	}
 		
 	public void moverArriba() {

@@ -34,11 +34,14 @@ public class Juego extends InterfaceJuego
 	private navesDestructoras NaveEnemiga4;
 	private navesDestructoras[] ListaNaves;
 	private boolean Disparado;
+	private boolean menu;
 	
 	private int vida;
 	private boolean conVidas = true;
 	Image gameover;
 	Image background;
+	Image MenuImagen;
+	Image prologoImagen;
 	
    
 
@@ -55,11 +58,11 @@ public class Juego extends InterfaceJuego
 		
 		// Inicializar lo que haga falta para el juego
 		this.miNave = new Nave(400, 500, 40, 40);
-		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,2);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,2,Color.RED);
 		this.Disparado = true;
 		
 		
-		
+		this.menu = true;
 		
 		// Asteroides
 		
@@ -79,15 +82,17 @@ public class Juego extends InterfaceJuego
 		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
 		
 		//Proyectiles de la nave enemiga
-		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),5,5,4);
-		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),5,5,4);
-		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),5,5,4);
-		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),5,5,4);
+		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),20,20,4,Color.BLUE);
+		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),20,20,4,Color.BLUE);
+		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),20,20,4,Color.BLUE);
+		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),20,20,4,Color.BLUE);
 		this.Listaiones= new Proyectil[] {this.iones1,this.iones2,this.iones3,this.iones4};
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
 		this.background=Herramientas.cargarImagen("imagenes/background.jpg");
+		this.MenuImagen=Herramientas.cargarImagen("imagenes/MenuImagen.jpg");
+		this.prologoImagen=Herramientas.cargarImagen("imagenes/background.jpg");
 		
 		//vidas
 		
@@ -106,8 +111,9 @@ public class Juego extends InterfaceJuego
 	 */
 	public void tick()
 	{
+		MenuInicial();
 		
-		if (this.conVidas) {
+		if (this.conVidas && this.menu != true) {
 			// Procesamiento de un instante de tiempo
 			this.entorno.dibujarImagen(background,400,300,0);
 			miNave.dibujarNave(this.entorno);
@@ -143,36 +149,12 @@ public class Juego extends InterfaceJuego
 				}
 				
 			}
-			/*
-			this.NaveEnemiga1.dibujarNaveEnemiga(this.entorno);
-			if (this.entorno.alto()/4 > this.NaveEnemiga1.getY()) {
-			
-				this.NaveEnemiga1.moverVertical();
-				if(this.entorno.alto()/2 > this.NaveEnemiga1.getY()) {
-					this.NaveEnemiga1.invertirDireccion();
-					
-				}
-					
-				if(RebotarNave(this.NaveEnemiga1)) {
-					this.NaveEnemiga1.InvertirMovimiento();
-					
-				}
-			}else {
-				this.NaveEnemiga1.moverDiagonal();
-				if(RebotarNave(this.NaveEnemiga1)) {
-					this.NaveEnemiga1.InvertirMovimiento();
-					
-					
-				}
-				
-			}
-			*/
-			
-			
+		
 			
 			//Disparo naveEnemiga
 			
 			for(int i=0; i<Listaiones.length;i++) {
+				colisiondeIones(Listaiones);
 				if(this.Listaiones[i]==null) {
 					generarIones(i);
 				}else {
@@ -189,18 +171,7 @@ public class Juego extends InterfaceJuego
 				
 			}
 			
-			
-			
-			
-			
-			
-			
-			
-			
 				
-			
-			
-			
 
 			// Asteroides
 			for (int i= 0; i <listaAsteroides.length;i++) {
@@ -231,7 +202,7 @@ public class Juego extends InterfaceJuego
 				//Colision cohete a asteroide	
 			}if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
 				this.Cohete =null; // el objeto se elimina
-				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1,Color.RED); //se crea uno nuevo
 				this.Disparado = true;
 				
 			}
@@ -240,18 +211,13 @@ public class Juego extends InterfaceJuego
 			 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					
 					
 				}
+				//Colision cohete a asteroide	
 			colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
-				
-			
-				
-				
-				
-			
 				
 				//Colision Asteroides a Astro-MegaShip
 			if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
@@ -264,9 +230,6 @@ public class Juego extends InterfaceJuego
 			
 			
 		}
-		
-		
-		
 		
 		
 		
@@ -345,6 +308,7 @@ public class Juego extends InterfaceJuego
 		        		this.miNave.getX() + this.miNave.getAncho() > iones[i].getX() &&
 		            this.miNave.getY() < iones[i].getY() + iones[i].getAlto() &&
 		            this.miNave.getY() + this.miNave.getAlto() > iones[i].getY()) {
+					
 		            return true; // Hay una colisión
 		        }
 				
@@ -386,12 +350,6 @@ public class Juego extends InterfaceJuego
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
 	private boolean RebotarAsteroide(Asteroides miAsteroide) { // Recibe un Objeto Asteroide y lo hace rebotar
 
@@ -405,7 +363,7 @@ public class Juego extends InterfaceJuego
 		
 	}
 	
-	//Cuando un Asteroide toca el borde de la ventana y cambia de direccion 
+	//Cuando una NaveEnemiga toca el borde de la ventana y cambia de direccion 
 		private boolean RebotarNave(navesDestructoras naveEnemiga) { // Recibe un Objeto Asteroide y lo hace rebotar
 
 			boolean ReboteTop = naveEnemiga.getY() > this.entorno.alto();
@@ -443,7 +401,7 @@ public class Juego extends InterfaceJuego
 	
 	//Crea un nuevo proyectil
 	private void generarIones(int i) {
-	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 5, 5, 4);
+	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 20, 20, 4,Color.BLUE);
 	}
 	
 	
@@ -461,6 +419,18 @@ public class Juego extends InterfaceJuego
 		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
 		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
 		this.entorno.escribirTexto(" { PRESIONE ESPACIO PARA SALIR } ",120,550);
+	}
+	
+	public void MenuInicial() {
+		
+		if(this.menu) {
+			this.entorno.dibujarImagen(MenuImagen,400,300,0);}
+			if(this.entorno.sePresiono(this.entorno.TECLA_ENTER)) {
+				this.menu = false;
+			
+
+		}
+		
 	}
 	
 
