@@ -55,7 +55,7 @@ public class Juego extends InterfaceJuego
 		
 		// Inicializar lo que haga falta para el juego
 		this.miNave = new Nave(400, 500, 40, 40);
-		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,2);
 		this.Disparado = true;
 		
 		
@@ -64,10 +64,10 @@ public class Juego extends InterfaceJuego
 		// Asteroides
 		
 		
-		this.Asteroide1 = new Asteroides(300,500, 20, 1);
-		this.Asteroide2 = new Asteroides(300,300, 20, 1);
-		this.Asteroide3 = new Asteroides(520,300, 20, -1);
-		this.Asteroide4 = new Asteroides(100,200, 20, -1);
+		this.Asteroide1 = new Asteroides(300,500, 40, 1);
+		this.Asteroide2 = new Asteroides(300,300, 40, 1);
+		this.Asteroide3 = new Asteroides(520,300, 40, -1);
+		this.Asteroide4 = new Asteroides(100,200, 40, -1);
 		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
 		
 		
@@ -245,6 +245,7 @@ public class Juego extends InterfaceJuego
 					
 					
 				}
+			colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
 				
 			
 				
@@ -419,6 +420,7 @@ public class Juego extends InterfaceJuego
 		
 	}
 	
+	//Crea un nuevo proyectil
 	private void generarIones(int i) {
 	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 5, 5, 4);
 	}
