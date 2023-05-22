@@ -165,16 +165,14 @@ public class Juego extends InterfaceJuego
 			}
 			*/
 			
-			// Dibuja los Asteroides
-			for(int i= 0; i <Listaiones.length;i++) {         
-				if(this.Listaiones[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
-					this.Listaiones[i].dibujarProyectil(entorno);
-				}
-							
-				}
+			
+			
 			//Disparo naveEnemiga
 			
 			for(int i=0; i<Listaiones.length;i++) {
+				if(this.Listaiones[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+					this.Listaiones[i].dibujarProyectil(entorno);
+				}
 				if (this.Listaiones[i].getY() != this.ListaNaves[i].getY()) {
 					this.Listaiones[i].moverAbajo(); 
 				
@@ -205,16 +203,14 @@ public class Juego extends InterfaceJuego
 				
 			
 			
-			// Dibuja los Asteroides
-			for(int i= 0; i <listaAsteroides.length;i++) {         
+			
+
+			// Asteroides
+			for (int i= 0; i <listaAsteroides.length;i++) {
+				// Dibuja Asteroides
 				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
 					this.listaAsteroides[i].dibujarAsteroide(entorno);
-				}
-				
-			}
-
-			// Mover asteroides y verificar colisión con la pantalla
-			for (int i= 0; i <listaAsteroides.length;i++) {
+				}// Mover asteroides y verificar colisión con la pantalla
 				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
 					this.listaAsteroides[i].mover();
 				    if (RebotarAsteroide(this.listaAsteroides[i])) {
@@ -222,6 +218,7 @@ public class Juego extends InterfaceJuego
 				    }
 					
 				}
+				
 				
 			}
 				
@@ -234,21 +231,25 @@ public class Juego extends InterfaceJuego
 				this.Cohete.moverArriba(); //Cuando Se presiona el espacio el cohete sale disparado
 				this.Disparado = false; // este boolean axuliar se pone en false
 				
+				//Colision cohete a asteroide	
+			}if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
+				this.Cohete =null; // el objeto se elimina
+				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+				this.Disparado = true;
 				
 			}
 			
 				
 				
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
-					this.Disparado = true;
 					this.Cohete =null; // el objeto se elimina
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1); //se crea uno nuevo
+					this.Disparado = true;
 					
 					
 				}
 				
-			//Colision cohete a asteroide	
-			colisionaAsteroideCohete(this.listaAsteroides, this.Cohete);
+			
 				
 				
 				
@@ -317,7 +318,7 @@ public class Juego extends InterfaceJuego
         return false; // No hay colisión
     }
 	
-	public void colisionaAsteroideCohete(Asteroides[] asteroide, Proyectil cohete) {
+	public boolean colisionaAsteroideCohete(Asteroides[] asteroide, Proyectil cohete) {
         // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
 		
 		for(int i=0; i< asteroide.length;i++) {
@@ -327,7 +328,7 @@ public class Juego extends InterfaceJuego
 		            cohete.getY() < asteroide[i].getY() + asteroide[i].getRadio() &&
 		            cohete.getY() + cohete.getAlto() > asteroide[i].getY() && cohete.getX() != this.miNave.getX() && cohete.getY() != this.miNave.getY() ) {
 		            asteroide[i] = null;
-		       
+		            return true;
 		            
 		           
 		             // Hay una colisión
@@ -339,7 +340,7 @@ public class Juego extends InterfaceJuego
 		}
 		
         
-         // No hay colisión
+        return false; // No hay colisión
     }
 	
 	
