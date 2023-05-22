@@ -254,7 +254,7 @@ public class Juego extends InterfaceJuego
 			
 				
 				//Colision Asteroides a Astro-MegaShip
-			if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones)) {
+			if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
 				System.out.println("¡La nave a recibido un impacto!");
 				this.conVidas = false;
 				
@@ -313,6 +313,27 @@ public class Juego extends InterfaceJuego
         
         return false; // No hay colisión
     }
+	
+	//Colision Destructores estelares a Astro-MegaShip 
+		public boolean colisionNaveEnemigaANave(navesDestructoras[] naveEnemiga) {
+	        // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
+			
+			for(int i=0; i< naveEnemiga.length;i++) {
+				if(this.ListaNaves[i] !=null) { // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
+					if (this.miNave.getX() < naveEnemiga[i].getX() + naveEnemiga[i].getAncho() &&
+			        		this.miNave.getX() + this.miNave.getAncho() > naveEnemiga[i].getX() &&
+			            this.miNave.getY() < naveEnemiga[i].getY() + naveEnemiga[i].getAlto() &&
+			            this.miNave.getY() + this.miNave.getAlto() > naveEnemiga[i].getY()) {
+			            return true; // Hay una colisión
+			        }
+					
+					
+				}
+				
+			}
+	        
+	        return false; // No hay colisión
+	    }
 	
 	//Colision Disparo de iones de Destructor estelar a Astro-MegaShip 
 	public boolean colisiondeIones(Proyectil[] iones) {
