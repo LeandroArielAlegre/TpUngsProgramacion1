@@ -32,8 +32,7 @@ public class Asteroides {
 	}
 
 	public void InvertirMovimiento() {
-		this.velocidad = (-velocidad);
-		this.direccion =(-direccion);
+		 this.direccion = -this.direccion;
 				
 	}
 

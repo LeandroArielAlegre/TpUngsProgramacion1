@@ -47,12 +47,12 @@ public class Proyectil {
 
 	public int getAncho() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.ancho;
 	}
 
 	public int getAlto() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.alto;
 	}
 }
 
