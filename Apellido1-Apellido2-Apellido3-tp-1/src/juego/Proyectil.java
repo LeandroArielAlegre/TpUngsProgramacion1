@@ -1,8 +1,10 @@
 package juego;
 
 import java.awt.Color;
+import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Proyectil {
 	private int x;
@@ -11,6 +13,9 @@ public class Proyectil {
 	private int ancho;
 	private int velocidad;
 	private Color color;
+	 Image cohete;
+	 Color invisible=new Color(255,0,0, 0);
+	
 	public Proyectil(int x, int y, int alto, int ancho, int velocidad, Color color) {
 		this.x = x;
 		this.y = y;
@@ -18,10 +23,14 @@ public class Proyectil {
 		this.ancho = ancho;
 		this.velocidad = velocidad;
 		this.color = color;
+		this.cohete =Herramientas.cargarImagen("imagenes/cohete.gif");
 	}
 	
 	public void dibujarProyectil(Entorno entorno) {
 		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , color);
+	}
+	public void dibujarImagenCohete(Entorno entorno) { 
+		entorno.dibujarImagen(this.cohete, this.x, this.y, 0,0.8);
 	}
 		
 	public void moverArriba() {

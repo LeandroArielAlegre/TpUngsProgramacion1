@@ -22,21 +22,21 @@ public class Nave {
 		this.y = y;
 		this.ancho = ancho;
 		this.alto = alto;
-		this.velocidad = 3;
+		this.velocidad = 5;
 		
-		this.nave1 =Herramientas.cargarImagen("imagenes/starship.gif");
+		this.nave1 =Herramientas.cargarImagen("imagenes/nave.gif");
 		
 		
 	}
 	
 	// Dibuja la nave
 	void dibujarNave(Entorno entorno) {
-		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.BLUE);
+		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, invisible);
 		
 	}
 	
 	public void dibujarImagenNave(Entorno entorno) { 
-		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,1);
+		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,0.3);
 	}
 	
 	

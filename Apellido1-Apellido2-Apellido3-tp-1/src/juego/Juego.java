@@ -58,8 +58,8 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Lost Galaxian - Grupo ... - v1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		this.miNave = new Nave(400, 500, 50, 50);
-		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED);
+		this.miNave = new Nave(400, 500, 80, 80);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),10,10,5,Color.RED);
 		this.Disparado = true;
 		
 		
@@ -68,10 +68,10 @@ public class Juego extends InterfaceJuego
 		// Asteroides
 		
 		
-		this.Asteroide1 = new Asteroides(100,1, 30, 1);
-		this.Asteroide2 = new Asteroides(200,1, 30, 1);
-		this.Asteroide3 = new Asteroides(400,1, 30, -1);
-		this.Asteroide4 = new Asteroides(500,1, 30, -1);
+		this.Asteroide1 = new Asteroides(100,1, 40, 1);
+		this.Asteroide2 = new Asteroides(200,1, 40, 1);
+		this.Asteroide3 = new Asteroides(400,1, 40, -1);
+		this.Asteroide4 = new Asteroides(500,1, 40, -1);
 		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
 		
 		
@@ -91,7 +91,7 @@ public class Juego extends InterfaceJuego
 		
 		//imagenes
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
-		this.background=Herramientas.cargarImagen("imagenes/background.jpg");
+		this.background=Herramientas.cargarImagen("imagenes/background1.gif");
 		this.MenuImagen=Herramientas.cargarImagen("imagenes/MenuImagen.jpg");
 		this.prologoImagen=Herramientas.cargarImagen("imagenes/background.jpg");
 		
@@ -119,10 +119,10 @@ public class Juego extends InterfaceJuego
 		
 		if (this.conVidas && this.menu != true) {
 			// Procesamiento de un instante de tiempo
-			this.entorno.dibujarImagen(background,400,300,0);
+			this.entorno.dibujarImagen(background,400,300,0,1.6);
 			miNave.dibujarNave(this.entorno);
-			MovimientodeNave();
-			this.Cohete.dibujarProyectil(entorno);
+			miNave.dibujarImagenNave(this.entorno);
+			MovimientodeNave(); 
 			this. Xrand = new Random();
 			this. Direccionrand = new Random();
 			//Movimiento Nave enemiga
@@ -180,6 +180,7 @@ public class Juego extends InterfaceJuego
 				// Dibuja Asteroides
 				if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
 					this.listaAsteroides[i].dibujarAsteroide(entorno); 
+					this.listaAsteroides[i].dibujarImagenAsteroide(entorno);
 					this.listaAsteroides[i].mover();
 				}// Mover asteroides y verificar colisión con la pantalla
 				
@@ -189,9 +190,12 @@ public class Juego extends InterfaceJuego
 				   
 				    if(this.listaAsteroides[i].getY() > 600 ) {
 				    	this.listaAsteroides[i]= null;
-				    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,30,Direccionrand.nextInt(-1,1));
+				    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,40,Direccionrand.nextInt(-1,1));
 					
-				} 
+				}
+				    
+				   
+				    
 				 
 				    
 				}
@@ -203,7 +207,11 @@ public class Juego extends InterfaceJuego
 			//public final char TECLA_A = 65; FALTA
 			
 			//Disparo astro-megaship
+			
+			
 			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO) || this.Cohete.getY() != this.miNave.getY()) {
+				this.Cohete.dibujarProyectil(entorno);
+				this.Cohete.dibujarImagenCohete( entorno);
 				this.Cohete.moverArriba(); //Cuando Se presiona el espacio el cohete sale disparado
 				this.Disparado = false; // este boolean axuliar se pone en false
 				
@@ -219,7 +227,7 @@ public class Juego extends InterfaceJuego
 			 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),10,10,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					
 					
@@ -338,7 +346,8 @@ public class Juego extends InterfaceJuego
 		            	coheteY < asteroidY + asteroidRadio &&
 		            	coheteY + coheteAlto > asteroidY) {
 		            	this.listaAsteroides[i]= null;
-					    this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,30,Direccionrand.nextInt(-1,1));
+					    this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,40,Direccionrand.nextInt(-1,1));
+					    
 		                return true; // Hay una colisión
 		            }
 		            
@@ -405,6 +414,7 @@ public class Juego extends InterfaceJuego
 	//Crea un nuevo proyectil
 	private void generarIones(int i) {
 	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 20, 20, 2,Color.BLUE);
+	    
 	}
 	
 	

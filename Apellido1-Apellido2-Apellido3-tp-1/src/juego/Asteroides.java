@@ -1,9 +1,11 @@
 package juego;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.util.Random;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Asteroides {
 	private int x;
@@ -11,6 +13,9 @@ public class Asteroides {
 	private int radio;
 	private int velocidad;
 	private int direccion;
+	Image asteroide;
+	Image asteroideDestruccion;
+	Color invisible=new Color(255,0,0, 0);
 	
 	
 	Asteroides(int x, int y, int radio, int direccion){
@@ -19,12 +24,22 @@ public class Asteroides {
 		this.radio = radio;
 		this.velocidad = 1;
 		this.direccion = direccion;
+		this.asteroide =Herramientas.cargarImagen("imagenes/asteroide.png");
+		this.asteroideDestruccion =Herramientas.cargarImagen("imagenes/asteroideDestruccion.gif");
+		
 		
 	}
 	void dibujarAsteroide(Entorno entorno) {
-		entorno.dibujarCirculo(this.x, this.y, this.radio, Color.ORANGE);
+		entorno.dibujarCirculo(this.x, this.y, this.radio, invisible);
 		
 	}
+	public void dibujarImagenAsteroide(Entorno entorno) { 
+		entorno.dibujarImagen(this.asteroide, this.x, this.y, 0,0.3);
+	}
+	public void dibujarImagenAsteroideDestruccion(Entorno entorno) { 
+		entorno.dibujarImagen(this.asteroideDestruccion, this.x, this.y, 0,0.3);
+	}
+	
 	public void mover()
 	{
 		this.y += velocidad;
