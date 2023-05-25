@@ -38,6 +38,7 @@ public class navesDestructoras {
 		
 		void mover() {
 			this.y += this.velocidad;
+			this.x = this.x - direccion;
 		}
 		
 		public void InvertirMovimiento() {

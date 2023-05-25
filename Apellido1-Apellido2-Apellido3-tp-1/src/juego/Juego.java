@@ -58,7 +58,7 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Lost Galaxian - Grupo ... - v1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		this.miNave = new Nave(400, 500, 80, 80);
+		this.miNave = new Nave(400, 500, 50, 50);
 		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),10,10,5,Color.RED);
 		this.Disparado = true;
 		
@@ -76,17 +76,17 @@ public class Juego extends InterfaceJuego
 		
 		
 		// Destructores Estelares
-		this.NaveEnemiga1 = new navesDestructoras(450,20,10,10,1);
-		this.NaveEnemiga2 = new navesDestructoras(400,50,10,10,-1);
-		this.NaveEnemiga3 = new navesDestructoras(350,50,10,10,1);
-		this.NaveEnemiga4 = new navesDestructoras(250,50,10,10,-1);
+		this.NaveEnemiga1 = new navesDestructoras(500,1,10,10,-1);
+		this.NaveEnemiga2 = new navesDestructoras(400,1,10,10,-1);
+		this.NaveEnemiga3 = new navesDestructoras(300,1,10,10,-1);
+		this.NaveEnemiga4 = new navesDestructoras(200,1,10,10,-1);
 		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
 		
 		//Proyectiles de la nave enemiga
-		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),20,20,2,Color.BLUE);
-		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),20,20,2,Color.BLUE);
-		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),20,20,2,Color.BLUE);
-		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),20,20,2,Color.BLUE);
+		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),20,20,5,Color.BLUE);
+		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),20,20,5,Color.BLUE);
+		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),20,20,5,Color.BLUE);
+		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),20,20,5,Color.BLUE);
 		this.Listaiones= new Proyectil[] {this.iones1,this.iones2,this.iones3,this.iones4};
 		
 		//imagenes
@@ -126,29 +126,27 @@ public class Juego extends InterfaceJuego
 			this. Xrand = new Random();
 			this. Direccionrand = new Random();
 			//Movimiento Nave enemiga
+			
 			for (int i = 0; i< ListaNaves.length;i++) {
-				this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
-				if (this.entorno.alto()/4 > this.ListaNaves[i].getY()) {
-				
+				if(this.ListaNaves[i] !=null) {
+					this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
 					this.ListaNaves[i].mover();
-					if(this.entorno.alto()/2 > this.ListaNaves[i].getY()) {
-						this.ListaNaves[i].InvertirMovimiento();
-						
-					}
-						
-					if(RebotarNave(this.ListaNaves[i])) {
-						this.ListaNaves[i].InvertirMovimiento();
-						
-					}
-				}else {
-					this.ListaNaves[i].mover();
-					if(RebotarNave(this.ListaNaves[i])) {
-						this.ListaNaves[i].InvertirMovimiento();
-						
-						
-					}
-					
 				}
+					
+				
+				if(this.entorno.alto()/6 == this.ListaNaves[i].getY()) {
+					this.ListaNaves[i].InvertirMovimiento();
+				}
+				if(this.entorno.alto()/3 == this.ListaNaves[i].getY()) {
+					this.ListaNaves[i].InvertirMovimiento();
+				}
+				if(this.entorno.alto()/2 == this.ListaNaves[i].getY()) {
+					this.ListaNaves[i].InvertirMovimiento();
+				}
+				if(this.ListaNaves[i].getY() > 600 ) {
+			    	this.ListaNaves[i]= null;
+			    	this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,10,10,-1);
+			}
 				
 			}
 		
@@ -193,9 +191,6 @@ public class Juego extends InterfaceJuego
 				    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,40,Direccionrand.nextInt(-1,1));
 					
 				}
-				    
-				   
-				    
 				 
 				    
 				}
@@ -413,7 +408,7 @@ public class Juego extends InterfaceJuego
 	
 	//Crea un nuevo proyectil
 	private void generarIones(int i) {
-	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 20, 20, 2,Color.BLUE);
+	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 20, 20, 5,Color.BLUE);
 	    
 	}
 	

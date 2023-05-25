@@ -36,7 +36,7 @@ public class Nave {
 	}
 	
 	public void dibujarImagenNave(Entorno entorno) { 
-		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,0.3);
+		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,0.2);
 	}
 	
 	
