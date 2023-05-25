@@ -36,21 +36,15 @@ public class navesDestructoras {
 			
 		}
 		
-		void moverVertical() {
+		void mover() {
 			this.y += this.velocidad;
 		}
-		void moverDiagonal() {
-			this.y += this.velocidad;
-			this.x += this.direccion;
-		}
+		
 		public void InvertirMovimiento() {
-			this.velocidad = (-velocidad);
-			this.direccion =(-direccion);
+			this.direccion = -this.direccion;
 					
 		}
-		void invertirDireccion() {
-			this.direccion= (-direccion);
-		}
+		
 		
 		
 		

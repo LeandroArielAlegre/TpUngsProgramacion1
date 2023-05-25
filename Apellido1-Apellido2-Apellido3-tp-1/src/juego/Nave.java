@@ -2,8 +2,10 @@ package juego;
 
 
 import java.awt.Color;
+import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Nave {
 	private int x;
@@ -11,6 +13,9 @@ public class Nave {
 	private int ancho;
 	private int alto;
 	private int velocidad;
+	Image nave1;
+	Color invisible=new Color(255,0,0, 0);
+	
 	
 	Nave(int x, int y, int ancho, int alto){ // Crea objeto Nave
 		this.x = x;
@@ -18,6 +23,10 @@ public class Nave {
 		this.ancho = ancho;
 		this.alto = alto;
 		this.velocidad = 3;
+		
+		this.nave1 =Herramientas.cargarImagen("imagenes/starship.gif");
+		
+		
 	}
 	
 	// Dibuja la nave
@@ -25,6 +34,11 @@ public class Nave {
 		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.BLUE);
 		
 	}
+	
+	public void dibujarImagenNave(Entorno entorno) { 
+		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,1);
+	}
+	
 	
 	// Metodos de movimiento
 	 void moverDerecha(){

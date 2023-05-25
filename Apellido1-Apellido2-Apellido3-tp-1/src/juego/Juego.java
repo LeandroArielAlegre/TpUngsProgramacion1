@@ -43,7 +43,8 @@ public class Juego extends InterfaceJuego
 	Image MenuImagen;
 	Image prologoImagen;
 	
-   
+	private Random Xrand;
+    private Random Direccionrand ;
 
 
 	
@@ -57,8 +58,8 @@ public class Juego extends InterfaceJuego
 		this.entorno = new Entorno(this, "Lost Galaxian - Grupo ... - v1", 800, 600);
 		
 		// Inicializar lo que haga falta para el juego
-		this.miNave = new Nave(400, 500, 40, 40);
-		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,2,Color.RED);
+		this.miNave = new Nave(400, 500, 50, 50);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED);
 		this.Disparado = true;
 		
 		
@@ -67,10 +68,10 @@ public class Juego extends InterfaceJuego
 		// Asteroides
 		
 		
-		this.Asteroide1 = new Asteroides(100,1, 10, 1);
-		this.Asteroide2 = new Asteroides(200,1, 10, 1);
-		this.Asteroide3 = new Asteroides(400,1, 10, -1);
-		this.Asteroide4 = new Asteroides(500,1, 10, -1);
+		this.Asteroide1 = new Asteroides(100,1, 30, 1);
+		this.Asteroide2 = new Asteroides(200,1, 30, 1);
+		this.Asteroide3 = new Asteroides(400,1, 30, -1);
+		this.Asteroide4 = new Asteroides(500,1, 30, -1);
 		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
 		
 		
@@ -96,6 +97,9 @@ public class Juego extends InterfaceJuego
 		
 		//vidas
 		
+		//random
+		
+		
 
 		// ...
 
@@ -119,16 +123,16 @@ public class Juego extends InterfaceJuego
 			miNave.dibujarNave(this.entorno);
 			MovimientodeNave();
 			this.Cohete.dibujarProyectil(entorno);
-			Random Xrand = new Random();
-			Random Direccionrand = new Random();
+			this. Xrand = new Random();
+			this. Direccionrand = new Random();
 			//Movimiento Nave enemiga
 			for (int i = 0; i< ListaNaves.length;i++) {
 				this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
 				if (this.entorno.alto()/4 > this.ListaNaves[i].getY()) {
 				
-					this.ListaNaves[i].moverVertical();
+					this.ListaNaves[i].mover();
 					if(this.entorno.alto()/2 > this.ListaNaves[i].getY()) {
-						this.ListaNaves[i].invertirDireccion();
+						this.ListaNaves[i].InvertirMovimiento();
 						
 					}
 						
@@ -137,7 +141,7 @@ public class Juego extends InterfaceJuego
 						
 					}
 				}else {
-					this.ListaNaves[i].moverDiagonal();
+					this.ListaNaves[i].mover();
 					if(RebotarNave(this.ListaNaves[i])) {
 						this.ListaNaves[i].InvertirMovimiento();
 						
@@ -185,13 +189,10 @@ public class Juego extends InterfaceJuego
 				   
 				    if(this.listaAsteroides[i].getY() > 600 ) {
 				    	this.listaAsteroides[i]= null;
-				    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,15,Direccionrand.nextInt(-1,1));
+				    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,30,Direccionrand.nextInt(-1,1));
 					
 				} 
-				 if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
-					 this.listaAsteroides[i]= null;
-				    this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,15,Direccionrand.nextInt(-1,1));
-				 }
+				 
 				    
 				}
 				
@@ -209,7 +210,7 @@ public class Juego extends InterfaceJuego
 				//Colision cohete a asteroide	
 			}if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
 				this.Cohete =null; // el objeto se elimina
-				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1,Color.RED); //se crea uno nuevo
+				this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 				this.Disparado = true;
 				
 			}
@@ -218,18 +219,15 @@ public class Juego extends InterfaceJuego
 			 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 				if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),5,5,1,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					
 					
 				}
 				
-				
 				//Colision Asteroides a Astro-MegaShip
 			if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
-				System.out.println("¡La nave a recibido un impacto!");
 				this.conVidas = false;
-				
 				
 					
 				}
@@ -259,22 +257,21 @@ public class Juego extends InterfaceJuego
 		
 		for(int i=0; i< asteroide.length;i++) {
 			if(this.listaAsteroides[i] !=null) { // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
-				 int asteroidX = asteroide[i].getX();
-		            int asteroidY = asteroide[i].getY();
-		            int asteroidRadio = asteroide[i].getRadio();
-		            int naveX = miNave.getX();
-		            int naveY = miNave.getY();
-		            int naveAncho = miNave.getAncho();
-		            int naveAlto = miNave.getAlto();
+				int asteroidX = asteroide[i].getX();
+	            int asteroidY = asteroide[i].getY();
+	            int asteroidRadio = asteroide[i].getRadio();
+	            int naveX = miNave.getX();
+	            int naveY = miNave.getY();
+	            int naveAncho = miNave.getAncho();
+	            int naveAlto = miNave.getAlto();
 
-		            // Verificar si hay colisión comparando las coordenadas y tamaños de los objetos
-		            if (naveX < asteroidX + asteroidRadio &&
-		                naveX + naveAncho > asteroidX &&
-		                naveY < asteroidY + asteroidRadio &&
-		                naveY + naveAlto > asteroidY) {
-		                return true; // Hay una colisión
-		            }
-				
+	            // Verificar si hay colisión comparando las coordenadas y tamaños de los objetos
+	            if (naveX < asteroidX + asteroidRadio &&
+	                naveX + naveAncho > asteroidX &&
+	                naveY < asteroidY + asteroidRadio &&
+	                naveY + naveAlto > asteroidY) {
+	                return true; // Hay una colisión
+	            }
 				
 			}
 			
@@ -327,7 +324,7 @@ public class Juego extends InterfaceJuego
 		
 		for(int i=0; i< asteroide.length;i++) {
 			if(this.listaAsteroides[i] !=null) {  // IMPORTANTE SI ES DESTRUIDO UN ASTEROIDE QUE NO LO ITERE
-				 int asteroidX = asteroide[i].getX();
+		            int asteroidX = asteroide[i].getX();
 		            int asteroidY = asteroide[i].getY();
 		            int asteroidRadio = asteroide[i].getRadio();
 		            int coheteX = cohete.getX();
@@ -340,11 +337,17 @@ public class Juego extends InterfaceJuego
 		            	coheteX + coheteAncho > asteroidX &&
 		            	coheteY < asteroidY + asteroidRadio &&
 		            	coheteY + coheteAlto > asteroidY) {
+		            	this.listaAsteroides[i]= null;
+					    this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,30,Direccionrand.nextInt(-1,1));
 		                return true; // Hay una colisión
 		            }
+		            
+		           
+		             // Hay una colisión
+		        }
 				
-				
-			}
+		
+			
 			
 		}
 		
