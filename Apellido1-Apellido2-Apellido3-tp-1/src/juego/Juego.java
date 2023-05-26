@@ -38,6 +38,7 @@ public class Juego extends InterfaceJuego
 	private int score;
 	private int vida;
 	private boolean conVidas = true;
+	private int cantEliminados;
 	Image gameover;
 	Image winScreen;
 	Image background;
@@ -103,6 +104,8 @@ public class Juego extends InterfaceJuego
 		
 		//Score
 		this.score =0;
+		//Enemigos eliminados
+		this.cantEliminados = 0;
 		
 		
 
@@ -135,6 +138,8 @@ public class Juego extends InterfaceJuego
 			
 			//Cantidad de vida
 			VidasTotal(this.vida);
+			// Enemigos obliterados
+			CantEnemigosEliminados(this.cantEliminados);
 		
 			
 			this. Xrand = new Random();
@@ -243,6 +248,7 @@ public class Juego extends InterfaceJuego
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					this.score +=150;
+					this.cantEliminados +=1;
 				}
 					
 				
@@ -525,6 +531,11 @@ public class Juego extends InterfaceJuego
 	public void VidasTotal(int vida) {
 		this.entorno.cambiarFont(Font.SANS_SERIF, 30, Color.CYAN);
 		this.entorno.escribirTexto("❤:"+ " " + vida,100,590);
+	}
+	
+	public void CantEnemigosEliminados(int cantEnemigos) {
+		this.entorno.cambiarFont(Font.SANS_SERIF, 30, Color.CYAN);
+		this.entorno.escribirTexto("Muertes:"+ " " + cantEnemigos,300,590);
 	}
 	
 	public void MenuInicial() {
