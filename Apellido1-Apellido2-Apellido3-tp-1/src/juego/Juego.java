@@ -39,6 +39,7 @@ public class Juego extends InterfaceJuego
 	private int vida;
 	private boolean conVidas = true;
 	private int cantEliminados;
+	private int CantidadEnemigos;
 	Image gameover;
 	Image winScreen;
 	Image background;
@@ -83,6 +84,7 @@ public class Juego extends InterfaceJuego
 		this.NaveEnemiga3 = new navesDestructoras(250,1,30,30,-1);
 		this.NaveEnemiga4 = new navesDestructoras(150,1,30,30,-1);
 		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
+		this.CantidadEnemigos = 5;
 
 
 		//Disparo de naves enemigas
@@ -124,7 +126,7 @@ public class Juego extends InterfaceJuego
 	public void tick()
 	{
 		MenuInicial();
-		if (this.conVidas && this.menu != true && this.score<1000) {
+		if (this.conVidas && this.menu != true && this.score<10000) {
 			// Procesamiento de un instante de tiempo
 			this.entorno.dibujarImagen(background,400,300,0,1.6);
 			
@@ -151,26 +153,30 @@ public class Juego extends InterfaceJuego
 						this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
 						this.ListaNaves[i].dibujarImagenNaveEnemiga(this.entorno);
 						this.ListaNaves[i].mover();
+						if(this.entorno.alto()/6 == this.ListaNaves[i].getY()) {
+							this.ListaNaves[i].InvertirMovimiento();
+						}
+						if(this.entorno.alto()/3 == this.ListaNaves[i].getY()) {
+							this.ListaNaves[i].InvertirMovimiento();
+						}
+						if(this.entorno.alto()/2 == this.ListaNaves[i].getY()) {
+							this.ListaNaves[i].InvertirMovimiento();
+						}
+						if(this.ListaNaves[i].getY() > 600 ) {
+					    	this.ListaNaves[i]= null;
+					    	if(this.CantidadEnemigos >=0) {
+					    		this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,30,30,Direccionrand.nextBoolean() ? -1 : 1);
+					    	}
+					    	
+						}
+						if(RebotarNaveEnemiga(this.ListaNaves[i])) {
+							this.ListaNaves[i].InvertirMovimiento();
+							
+						}
 					}
 						
 					
-					if(this.entorno.alto()/6 == this.ListaNaves[i].getY()) {
-						this.ListaNaves[i].InvertirMovimiento();
-					}
-					if(this.entorno.alto()/3 == this.ListaNaves[i].getY()) {
-						this.ListaNaves[i].InvertirMovimiento();
-					}
-					if(this.entorno.alto()/2 == this.ListaNaves[i].getY()) {
-						this.ListaNaves[i].InvertirMovimiento();
-					}
-					if(this.ListaNaves[i].getY() > 600 ) {
-				    	this.ListaNaves[i]= null;
-				    	this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,30,30,Direccionrand.nextBoolean() ? -1 : 1);
-				}
-					if(RebotarNaveEnemiga(this.ListaNaves[i])) {
-						this.ListaNaves[i].InvertirMovimiento();
-						
-					}
+					
 	
 	
 	
@@ -290,7 +296,7 @@ public class Juego extends InterfaceJuego
 				System.exit(0);
 				}
 		}
-		if(this.score >	1000) {
+		if(this.score ==	1000) {
 			PantallaGanar();
 			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO)) {
 				System.exit(0);
@@ -419,8 +425,14 @@ public class Juego extends InterfaceJuego
 		            this.Cohete.getY() < naveEnemiga[i].getY() + naveEnemiga[i].getAlto() &&
 		            this.Cohete.getY() + this.Cohete.getAlto() > naveEnemiga[i].getY()) {
 					this.ListaNaves[i]= null;
-			    	this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,30,30,Direccionrand.nextBoolean() ? -1 : 1);
+					this.CantidadEnemigos -=1;
+					if(this.CantidadEnemigos >= 0 ) {
+						this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,30,30,Direccionrand.nextBoolean() ? -1 : 1);
+					}
+			    	
 		            return true; // Hay una colisión
+		            
+		            
 		        }
 				
 				
@@ -458,12 +470,16 @@ public class Juego extends InterfaceJuego
 	
 	//Cuando una Nave enemiga toca el borde de la ventana y cambia de direccion 
 		private boolean RebotarNaveEnemiga(navesDestructoras naveEnemiga) { // Recibe un Objeto naveEnemiga y lo hace rebotar
-			 int limiteIzquierdo = 0;
-			 int limiteDerecho = this.entorno.ancho() - 2 * naveEnemiga.getAncho();
+			if(naveEnemiga != null) {
+				int limiteIzquierdo = 0;
+				 int limiteDerecho = this.entorno.ancho() - 2 * naveEnemiga.getAncho();
 
-			    if (naveEnemiga.getX() < limiteIzquierdo || naveEnemiga.getX() > limiteDerecho) {
-			        return true; // La nave enemiga ha tocado el borde de la ventana
-			    }
+				    if (naveEnemiga.getX() < limiteIzquierdo || naveEnemiga.getX() > limiteDerecho) {
+				        return true; // La nave enemiga ha tocado el borde de la ventana
+				    }
+				
+			}
+			 
 
 			    return false; // No ha ocurrido colisión con el borde de la ventana
 			
@@ -498,7 +514,10 @@ public class Juego extends InterfaceJuego
 	
 	//Crea un nuevo proyectil
 	private void generarIones(int i) {
-	    this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 30, 30, 5,Color.BLUE);
+		if(this.ListaNaves[i] != null) {
+			 this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 30, 30, 5,Color.BLUE);
+		}
+	 
 	    
 	}
 	
