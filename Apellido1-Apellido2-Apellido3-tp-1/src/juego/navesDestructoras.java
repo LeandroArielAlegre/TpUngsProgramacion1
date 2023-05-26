@@ -14,6 +14,7 @@ public class navesDestructoras {
 	private int velocidad;
 	private int direccion;
 	private Image destructorEstelar;
+	private Color invisible=new Color(255,0,0, 0);
 	
 	
 	
@@ -36,7 +37,7 @@ public class navesDestructoras {
 	
 	// Dibuja la nave
 		void dibujarNaveEnemiga(Entorno entorno) {
-			entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.GRAY);
+			entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, invisible);
 			
 		}
 		public void dibujarImagenNaveEnemiga(Entorno entorno) { 
@@ -53,7 +54,7 @@ public class navesDestructoras {
 					
 		}
 		void rebote() {
-			this.x = this.x - 2;
+			this.x = this.x + 2;
 		}
 		
 		//Colision de con otra nave

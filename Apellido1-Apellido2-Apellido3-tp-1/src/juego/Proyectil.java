@@ -29,7 +29,7 @@ public class Proyectil {
 	}
 	
 	public void dibujarProyectil(Entorno entorno) {
-		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , color);
+		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0 , invisible);
 	}
 	public void dibujarImagenCohete(Entorno entorno) { 
 		entorno.dibujarImagen(this.cohete, this.x, this.y, 0,0.8);
