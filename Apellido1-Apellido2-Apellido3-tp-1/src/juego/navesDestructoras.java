@@ -1,8 +1,10 @@
 package juego;
 
 import java.awt.Color;
+import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class navesDestructoras {
 	private int x;
@@ -11,6 +13,7 @@ public class navesDestructoras {
 	private int alto;
 	private int velocidad;
 	private int direccion;
+	private Image destructorEstelar;
 	
 	
 	
@@ -21,6 +24,7 @@ public class navesDestructoras {
 		this.ancho = ancho;
 		this.velocidad = 1;
 		this.direccion= direccion;
+		this.destructorEstelar =Herramientas.cargarImagen("imagenes/destructor.gif");
 		
 		
 		
@@ -35,6 +39,9 @@ public class navesDestructoras {
 			entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.GRAY);
 			
 		}
+		public void dibujarImagenNaveEnemiga(Entorno entorno) { 
+			entorno.dibujarImagen(this.destructorEstelar, this.x, this.y, 0,1);
+		}
 		
 		void mover() {
 			this.y += this.velocidad;
@@ -45,7 +52,22 @@ public class navesDestructoras {
 			this.direccion = -this.direccion;
 					
 		}
+		void rebote() {
+			this.x = this.x - 2;
+		}
 		
+		//Colision de con otra nave
+		public boolean colisionNaveEnemigaANave(navesDestructoras otraNave) {
+		    // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
+		    if (this.getX() < otraNave.getX() + otraNave.getAncho() &&
+		        this.getX() + this.getAncho() > otraNave.getX() &&
+		        this.getY() < otraNave.getY() + otraNave.getAlto() &&
+		        this.getY() + this.getAlto() > otraNave.getY()) {
+		        return true; // Hay una colisión
+		    }
+		    
+		    return false; // No hay colisión
+		}
 		
 		
 		

@@ -13,8 +13,9 @@ public class Proyectil {
 	private int ancho;
 	private int velocidad;
 	private Color color;
-	 Image cohete;
-	 Color invisible=new Color(255,0,0, 0);
+	private Image cohete;
+	private Image iones;
+	private Color invisible=new Color(255,0,0, 0);
 	
 	public Proyectil(int x, int y, int alto, int ancho, int velocidad, Color color) {
 		this.x = x;
@@ -24,6 +25,7 @@ public class Proyectil {
 		this.velocidad = velocidad;
 		this.color = color;
 		this.cohete =Herramientas.cargarImagen("imagenes/cohete.gif");
+		this.iones = Herramientas.cargarImagen("imagenes/ion.gif");
 	}
 	
 	public void dibujarProyectil(Entorno entorno) {
@@ -31,6 +33,9 @@ public class Proyectil {
 	}
 	public void dibujarImagenCohete(Entorno entorno) { 
 		entorno.dibujarImagen(this.cohete, this.x, this.y, 0,0.8);
+	}
+	public void dibujarImagenIones(Entorno entorno) { 
+		entorno.dibujarImagen(this.iones, this.x, this.y, 1.5,0.4);
 	}
 		
 	public void moverArriba() {

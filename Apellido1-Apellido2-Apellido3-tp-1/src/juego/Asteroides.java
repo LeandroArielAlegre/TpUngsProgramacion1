@@ -13,9 +13,9 @@ public class Asteroides {
 	private int radio;
 	private int velocidad;
 	private int direccion;
-	Image asteroide;
-	Image asteroideDestruccion;
-	Color invisible=new Color(255,0,0, 0);
+	private Image asteroide;
+	private Image asteroideDestruccion;
+	private Color invisible=new Color(255,0,0, 0);
 	
 	
 	Asteroides(int x, int y, int radio, int direccion){
