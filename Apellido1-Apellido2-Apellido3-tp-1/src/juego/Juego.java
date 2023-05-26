@@ -39,6 +39,7 @@ public class Juego extends InterfaceJuego
 	private int vida;
 	private boolean conVidas = true;
 	Image gameover;
+	Image winScreen;
 	Image background;
 	Image MenuImagen;
 	Image prologoImagen;
@@ -95,6 +96,7 @@ public class Juego extends InterfaceJuego
 		this.background=Herramientas.cargarImagen("imagenes/background1.gif");
 		this.MenuImagen=Herramientas.cargarImagen("imagenes/MenuImagen.jpg");
 		this.prologoImagen=Herramientas.cargarImagen("imagenes/background.jpg");
+		this.winScreen = Herramientas.cargarImagen("imagenes/winScreen.jpg");
 		
 		//vidas
 		this.vida = 100;
@@ -277,7 +279,13 @@ public class Juego extends InterfaceJuego
 		
 		//Dibuja una pantalla al morir y al presionar espacio se detiene el programa
 		if(this.conVidas != true) {
-			PantallaFinal();
+			PantallaPerder();
+			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO)) {
+				System.exit(0);
+				}
+		}
+		if(this.score >	1000) {
+			PantallaGanar();
 			if (this.entorno.sePresiono(entorno.TECLA_ESPACIO)) {
 				System.exit(0);
 				}
@@ -493,13 +501,21 @@ public class Juego extends InterfaceJuego
 	
 	
 	//DIBUJA LA PANTALLA FINAL DEL JUEGO
-	public void PantallaFinal() {
-		this.entorno.dibujarImagen(gameover,400,300,0,2);
+	public void PantallaPerder() {
+		this.entorno.dibujarImagen(gameover,400,300,0,1);
 		this.entorno.cambiarFont(Font.DIALOG, 40, Color.RED);
 		this.entorno.escribirTexto("PERDISTE",310,150);
 		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
 		this.entorno.cambiarFont(Font.DIALOG, 30, Color.RED);
-		this.entorno.escribirTexto(" { PRESIONE ESPACIO PARA SALIR } ",120,550);
+		this.entorno.escribirTexto(" { PRESIONE ESPACIO PARA SALIR } ",140,550);
+	}
+	public void PantallaGanar() {
+		this.entorno.dibujarImagen(winScreen,400,300,0,1);
+		this.entorno.cambiarFont(Font.DIALOG, 40, Color.cyan);
+		this.entorno.escribirTexto("GANASTE",310,150);
+		this.entorno.cambiarFont(Font.DIALOG, 30, Color.cyan);
+		this.entorno.cambiarFont(Font.DIALOG, 30, Color.cyan);
+		this.entorno.escribirTexto(" { PRESIONE ESPACIO PARA SALIR } ",140,550);
 	}
 	
 	public void PuntosTotales(int score) {
