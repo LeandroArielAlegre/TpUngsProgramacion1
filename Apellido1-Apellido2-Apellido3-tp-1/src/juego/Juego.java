@@ -262,6 +262,7 @@ public class Juego extends InterfaceJuego
 				
 				}
 				if(colisionItemNave(itemVida)) {
+					Herramientas.play("ost/itemVida.wav");
 					this.vida +=50;
 					this.score +=10;
 				}
@@ -341,6 +342,7 @@ public class Juego extends InterfaceJuego
 					//Colision Asteroides a Astro-MegaShip
 				if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
 					Herramientas.play("ost/Ion.wav");
+					this.miNave.dibujarImagenNaveDaño(entorno);
 					this.vida -= 1;
 					
 				

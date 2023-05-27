@@ -13,7 +13,8 @@ public class Nave {
 	private int ancho;
 	private int alto;
 	private int velocidad;
-	Image nave1;
+	private Image nave1;
+	private Image naveDaño;
 	Color invisible=new Color(255,0,0, 0);
 	
 	
@@ -23,8 +24,8 @@ public class Nave {
 		this.ancho = ancho;
 		this.alto = alto;
 		this.velocidad = 5;
-		
 		this.nave1 =Herramientas.cargarImagen("imagenes/nave.gif");
+		this.naveDaño = Herramientas.cargarImagen("imagenes/naveDaño.gif");
 		
 		
 	}
@@ -37,6 +38,9 @@ public class Nave {
 	
 	public void dibujarImagenNave(Entorno entorno) { 
 		entorno.dibujarImagen(this.nave1, this.x, this.y, 0,0.2);
+	}
+	public void dibujarImagenNaveDaño(Entorno entorno) { 
+		entorno.dibujarImagen(this.naveDaño, this.x, this.y, 0,0.2);
 	}
 	
 	

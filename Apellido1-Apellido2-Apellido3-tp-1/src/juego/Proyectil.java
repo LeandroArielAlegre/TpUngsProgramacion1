@@ -12,7 +12,6 @@ public class Proyectil {
 	private int alto;
 	private int ancho;
 	private int velocidad;
-	private Color color;
 	private Image cohete;
 	private Image iones;
 	private Color invisible=new Color(255,0,0, 0);
@@ -23,7 +22,6 @@ public class Proyectil {
 		this.alto = alto;
 		this.ancho = ancho;
 		this.velocidad = velocidad;
-		this.color = color;
 		this.cohete =Herramientas.cargarImagen("imagenes/cohete.gif");
 		this.iones = Herramientas.cargarImagen("imagenes/ion.gif");
 	}
