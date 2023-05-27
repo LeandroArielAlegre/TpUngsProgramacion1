@@ -33,13 +33,13 @@ public class Boss {
 		void dibujarImagenBoss(Entorno entorno) {
 			entorno.dibujarImagen(this.boss, this.x, this.y, 0,0.3);
 		}
-		public void moverHorizontal() {
+		public void moverVertical() {
 			this.y += this.velocidad;
 		}
-		public void moverVertical() {
+		public void moverHorizontal() {
 			this.x = this.x + this.velocidad;
 		}
-		public void InvertirMoverVetical() {
+		public void InvertirMoverHorizontal() {
 			this.velocidad = -this.velocidad;
 		}
 	public int getX() {

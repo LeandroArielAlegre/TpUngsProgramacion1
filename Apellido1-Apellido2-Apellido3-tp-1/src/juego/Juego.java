@@ -7,6 +7,7 @@ import entorno.Herramientas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -47,11 +48,12 @@ public class Juego extends InterfaceJuego
 	private int cantEliminados;
 	private int CantidadEnemigos;
 	private int vidaJefe;
-	Image gameover;
-	Image winScreen;
-	Image background;
-	Image MenuImagen;
-	Image prologoImagen;
+	private Image gameover;
+	private Image winScreen;
+	private Image background;
+	private Image MenuImagen;
+	private Image explosion;
+	private ArrayList<Explosion> explosiones;
 	
 	private Random Xrand;
     private Random Direccionrand ;
@@ -91,7 +93,7 @@ public class Juego extends InterfaceJuego
 		this.NaveEnemiga3 = new navesDestructoras(250,1,30,30,-1);
 		this.NaveEnemiga4 = new navesDestructoras(150,1,30,30,-1);
 		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
-		this.CantidadEnemigos = 5;
+		
 
 
 		//Disparo de naves enemigas
@@ -104,6 +106,11 @@ public class Juego extends InterfaceJuego
 		//JEFE FINAL
 		this.aparicionJefe = true;
 		
+		//explosion
+		this.explosion =Herramientas.cargarImagen("imagenes/explosion.gif");
+		explosiones = new ArrayList<>();
+		
+		
 		
 		//musica
 		Herramientas.loop("ost/mainTheme.wav");
@@ -114,21 +121,23 @@ public class Juego extends InterfaceJuego
 		this.gameover=Herramientas.cargarImagen("imagenes/gameover.png");
 		this.background=Herramientas.cargarImagen("imagenes/background1.gif");
 		this.MenuImagen=Herramientas.cargarImagen("imagenes/MenuImagen.jpg");
-		this.prologoImagen=Herramientas.cargarImagen("imagenes/background.jpg");
 		this.winScreen = Herramientas.cargarImagen("imagenes/winScreen.jpg");
 		
 		//itemVida
 		this.itemVida = new item(200,1, 40, 40);
 		
+		// DETERMINA LA CANTIDAD DE ENEMIGOS MAXIMOS POR PARTIDA
+		this.CantidadEnemigos = 5;
 		
 		//vidas
 		this.vida = 100;
 		
 		//vida jefe final
-		this.vidaJefe = 250;
+		this.vidaJefe = 350;
 		
 		//Score
 		this.score =0;
+		
 		//Enemigos eliminados
 		this.cantEliminados = 0;
 		
@@ -152,20 +161,31 @@ public class Juego extends InterfaceJuego
 		if (this.conVidas && this.menu != true && this.score<10000) {
 			
 			// Procesamiento de un instante de tiempo
-			this.entorno.dibujarImagen(background,400,300,0,1.6);
+			this.entorno.dibujarImagen(background,400,300,0,1.6); // la imagen de fondo del juego
 			
 			//Nave Jugador
 			miNave.dibujarNave(this.entorno);
 			miNave.dibujarImagenNave(this.entorno);
-			MovimientodeNave();
+			MovimientodeNave(); //todo el movimiento de la nave
 			
 			//score
-			PuntosTotales(this.score);
+			PuntosTotales(this.score); //dibuja en pantalla el puntaje
 			
 			//Cantidad de vida
-			VidasTotal(this.vida);
+			VidasTotal(this.vida); //dibuja en pantalla ela vida
 			// Enemigos obliterados
-			CantEnemigosEliminados(this.cantEliminados);
+			CantEnemigosEliminados(this.cantEliminados); //dibuja en pantalla el puntajla cantidad de enemigos eliminados
+			//Dibujar explosion: Debido a que no se puede definir la cantidad de explosiones, decidimos usar un arrayList
+			for (int i = 0; i < explosiones.size(); i++) {
+				Explosion explosion = explosiones.get(i);
+	            entorno.dibujarImagen(explosion.getImagen(), explosion.getX(), explosion.getY(), 0,0.5);
+	            explosion.actualizar(); //Empieza a el transcurrir el tiempo
+	            if (explosion.haTerminado()) { //llego al final de duracion
+	                explosiones.remove(i); //lo elimino de la lista
+	                i--;
+	            }
+	        }
+			
 			
 			//Cuando el limite de enemigos sea 0, aparecera el jefe final
 			if(this.CantidadEnemigos <=0) {
@@ -178,16 +198,16 @@ public class Juego extends InterfaceJuego
 				vidaDelJefe(this.vidaJefe);
 				//el jefe llega hasta 1/4 del alto de la pantalla y luego se mueve en horizontal
 				if(this.entorno.alto()/4 != this.jefeFinal.getY()) {
-					this.jefeFinal.moverHorizontal();
-				}else {
 					this.jefeFinal.moverVertical();
+				}else {
+					this.jefeFinal.moverHorizontal();
 				}//Cuando el jefe toque el borde de la pantalla se invierte su movimiento en vertical
 				if(RebotarJefe(this.jefeFinal)) {
-					this.jefeFinal.InvertirMoverVetical();
+					this.jefeFinal.InvertirMoverHorizontal();
 				} //Cuando muere el jefe final automaticamente ganas el juego
 				if(this.vidaJefe<=0 ) {
-					this.jefeFinal=null;
-					this.score = 10000;
+					this.jefeFinal=null; //JEFE ELIMINADO
+					this.score = 10000; //GANAS AUTOMATICAMENTE
 				}
 				
 				
@@ -204,18 +224,18 @@ public class Juego extends InterfaceJuego
 						this.ListaNaves[i].dibujarNaveEnemiga(this.entorno);
 						this.ListaNaves[i].dibujarImagenNaveEnemiga(this.entorno);
 						this.ListaNaves[i].mover();
-						if(this.entorno.alto()/6 == this.ListaNaves[i].getY()) {
+						if(this.entorno.alto()/6 == this.ListaNaves[i].getY()) { //movimiento en zig zag
 							this.ListaNaves[i].InvertirMovimiento();
 						}
-						if(this.entorno.alto()/3 == this.ListaNaves[i].getY()) {
+						if(this.entorno.alto()/3 == this.ListaNaves[i].getY()) { //movimiento en zig zag
 							this.ListaNaves[i].InvertirMovimiento();
 						}
-						if(this.entorno.alto()/2 == this.ListaNaves[i].getY()) {
+						if(this.entorno.alto()/2 == this.ListaNaves[i].getY()) { //movimiento en zig zag
 							this.ListaNaves[i].InvertirMovimiento();
 						}
-						if(this.ListaNaves[i].getY() > 600 ) {
+						if(this.ListaNaves[i].getY() > 600 ) { //sale de la pantalla
 					    	this.ListaNaves[i]= null;
-					    	if(this.CantidadEnemigos >=0) {
+					    	if(this.CantidadEnemigos >=0) { // si ya se eliminaron todas las naves no crear mas
 					    		this.ListaNaves[i]= new navesDestructoras(Xrand.nextInt(200,600),1,30,30,Direccionrand.nextBoolean() ? -1 : 1);
 					    	}
 					    	
@@ -225,8 +245,6 @@ public class Juego extends InterfaceJuego
 							
 						}
 					}
-		
-	
 	
 					
 				}
@@ -235,18 +253,20 @@ public class Juego extends InterfaceJuego
 				//Disparo naveEnemiga
 				
 				for(int i=0; i<Listaiones.length;i++) {
-					colisiondeIones(Listaiones);
+					colisiondeIones(Listaiones); // si colisiona con la nave
 					if(this.Listaiones[i]==null) {
 						generarIones(i); // Si es null crea un objeto iones
+						
 					}else {
 						this.Listaiones[i].moverAbajo();
 						this.Listaiones[i].dibujarProyectil(entorno);
 						this.Listaiones[i].dibujarImagenIones( entorno);
 					}
-					if (this.Listaiones[i] != null) {
+					if (this.Listaiones[i] != null) { // si sale de la pantalla
 					    if (this.Listaiones[i].getY() >= this.entorno.alto()) {
 					        this.Listaiones[i] = null;
 					    }
+					    
 					}
 	
 					
@@ -256,15 +276,15 @@ public class Juego extends InterfaceJuego
 				this.itemVida.dibujarItem(entorno);
 				this.itemVida.dibujarImagenItem(entorno);
 				this.itemVida.mover();
-				if(this.itemVida.getY() > 600 ) {
+				if(this.itemVida.getY() > 600 ) { //SI el item sale de la pantalla y no colisiona con la nave
 			    	this.itemVida= null;
 			    	this.itemVida= new item(Xrand.nextInt(50,550),1,40,40);
 				
 				}
-				if(colisionItemNave(itemVida)) {
+				if(colisionItemNave(itemVida)) { // si el item colisiona con la nave
 					Herramientas.play("ost/itemVida.wav");
-					this.vida +=50;
-					this.score +=10;
+					this.vida +=50; //le da 50 puntos de vida al jugador
+					this.score +=10; // incrementa en 10 el puntaje
 				}
 					
 				
@@ -284,7 +304,7 @@ public class Juego extends InterfaceJuego
 					    	this.listaAsteroides[i].InvertirMovimiento();
 						}
 					   
-					    if(this.listaAsteroides[i].getY() > 600 ) {
+					    if(this.listaAsteroides[i].getY() > 600 ) { //Si el asteroide sale de la pantalla
 					    	this.listaAsteroides[i]= null;
 					    	this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,40,Direccionrand.nextBoolean() ? -1 : 1);
 						
@@ -308,7 +328,7 @@ public class Juego extends InterfaceJuego
 					//Colision cohete a asteroide	
 				}if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 					this.score +=50;
@@ -316,7 +336,7 @@ public class Juego extends InterfaceJuego
 				}//Colision cohete a Nave	
 				if(colisionCoheteNave(this.ListaNaves)) {
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 					this.score +=150;
@@ -325,12 +345,11 @@ public class Juego extends InterfaceJuego
 				if(colisionCoheteJefe(this.jefeFinal)) {
 					this.vidaJefe -=50;
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 				}
 				
-					
 				 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 						this.Cohete =null; // el objeto se elimina
@@ -437,6 +456,8 @@ public class Juego extends InterfaceJuego
 			        		this.miNave.getX() + this.miNave.getAncho() > naveEnemiga[i].getX() &&
 			            this.miNave.getY() < naveEnemiga[i].getY() + naveEnemiga[i].getAlto() &&
 			            this.miNave.getY() + this.miNave.getAlto() > naveEnemiga[i].getY()) {
+						Explosion explosion = new Explosion(this.explosion, naveEnemiga[i].getX(), naveEnemiga[i].getY(), 30);
+		                explosiones.add(explosion);
 			            return true; // Hay una colisión
 			        }
 					
@@ -458,6 +479,12 @@ public class Juego extends InterfaceJuego
 	                iones[i].getX() + iones[i].getAncho() > miNave.getX() &&
 	                iones[i].getY() < miNave.getY() + miNave.getAlto() &&
 	                iones[i].getY() + iones[i].getAlto() > miNave.getY()) {
+	            	
+	            	int xNaveEnemiga = this.ListaNaves[i].getX();
+	            	int YNaveEnemiga = this.ListaNaves[i].getY();
+	            	
+	            	this.Listaiones[i]= null;
+					this.Listaiones[i] = new Proyectil(xNaveEnemiga, YNaveEnemiga, 30, 30, 5,Color.BLUE);
 	                return true; // Hay una colisión
 	            }
 			}
@@ -484,6 +511,8 @@ public class Juego extends InterfaceJuego
 		            	coheteX + coheteAncho > asteroidX &&
 		            	coheteY < asteroidY + asteroidRadio &&
 		            	coheteY + coheteAlto > asteroidY) {
+		            	Explosion explosion = new Explosion(this.explosion, asteroidX, asteroidY, 30);
+		                explosiones.add(explosion);
 		            	this.listaAsteroides[i]= null;
 					    this.listaAsteroides [i]= new Asteroides(Xrand.nextInt(50,550),0,40,Direccionrand.nextBoolean() ? -1 : 1);
 					    
@@ -509,6 +538,8 @@ public class Juego extends InterfaceJuego
 		        		this.Cohete.getX() + this.Cohete.getAncho() > naveEnemiga[i].getX() &&
 		            this.Cohete.getY() < naveEnemiga[i].getY() + naveEnemiga[i].getAlto() &&
 		            this.Cohete.getY() + this.Cohete.getAlto() > naveEnemiga[i].getY()) {
+					Explosion explosion = new Explosion(this.explosion, naveEnemiga[i].getX(), naveEnemiga[i].getY(), 30);
+	                explosiones.add(explosion);
 					this.ListaNaves[i]= null;
 					this.CantidadEnemigos -=1;
 					if(this.CantidadEnemigos >= 0 ) {
@@ -559,6 +590,9 @@ public class Juego extends InterfaceJuego
 					        		this.Cohete.getX() + this.Cohete.getAncho() > jefeFinal.getX() &&
 					            this.Cohete.getY() < jefeFinal.getY() + jefeFinal.getAlto() &&
 					            this.Cohete.getY() + this.Cohete.getAlto() > jefeFinal.getY()) {
+								Explosion explosion = new Explosion(this.explosion, jefeFinal.getX(), jefeFinal.getY()+130, 30);
+				                explosiones.add(explosion);
+								
 						    	
 					            return true; // Hay una colisión
 						}
@@ -566,7 +600,7 @@ public class Juego extends InterfaceJuego
 				            
 				            
 				        }
-						
+				
 				
 		        
 		        return false; // No hay colisión
@@ -632,6 +666,7 @@ public class Juego extends InterfaceJuego
 		if(this.ListaNaves[i] != null) {
 			 this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 30, 30, 5,Color.BLUE);
 		}
+		
 		//En caso de Aparecer el BOSS, EL boss disparara proyectiles de iones
 		
 		if(this.aparicionJefe ==false) {
@@ -646,7 +681,8 @@ public class Juego extends InterfaceJuego
 	}
 	
 	
-	//Metodos especiales de movimiento de los Destructores estelares:
+	//explosion
+	
 	
 	
 	//DIBUJA LAS PANTALLAS DEL JUEGO
@@ -712,3 +748,7 @@ public class Juego extends InterfaceJuego
 		
 	}
 }
+
+
+
+

@@ -16,7 +16,7 @@ public class Proyectil {
 	private Image iones;
 	private Color invisible=new Color(255,0,0, 0);
 	
-	public Proyectil(int x, int y, int alto, int ancho, int velocidad, Color color) {
+	public Proyectil(int x, int y, int alto, int ancho, int velocidad,Color color) {
 		this.x = x;
 		this.y = y;
 		this.alto = alto;
