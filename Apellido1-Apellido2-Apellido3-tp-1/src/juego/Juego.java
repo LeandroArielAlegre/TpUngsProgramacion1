@@ -8,6 +8,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.util.Random;
+
+import javax.swing.JOptionPane;
+
 import entorno.InterfaceJuego;
 
 public class Juego extends InterfaceJuego
@@ -100,6 +103,10 @@ public class Juego extends InterfaceJuego
 		
 		//JEFE FINAL
 		this.aparicionJefe = true;
+		
+		
+		//musica
+		Herramientas.loop("ost/mainTheme.wav");
 	
 		
 		
@@ -143,6 +150,7 @@ public class Juego extends InterfaceJuego
 	{
 		MenuInicial();
 		if (this.conVidas && this.menu != true && this.score<10000) {
+			
 			// Procesamiento de un instante de tiempo
 			this.entorno.dibujarImagen(background,400,300,0,1.6);
 			
@@ -159,7 +167,7 @@ public class Juego extends InterfaceJuego
 			// Enemigos obliterados
 			CantEnemigosEliminados(this.cantEliminados);
 			
-			
+			//Cuando el limite de enemigos sea 0, aparecera el jefe final
 			if(this.CantidadEnemigos <=0) {
 				if(this.aparicionJefe) {
 					this.jefeFinal = new Boss(400,1, 170, 170);
@@ -168,14 +176,15 @@ public class Juego extends InterfaceJuego
 				this.jefeFinal.dibujarBoss(entorno);
 				this.jefeFinal.dibujarImagenBoss(entorno);
 				vidaDelJefe(this.vidaJefe);
+				//el jefe llega hasta 1/4 del alto de la pantalla y luego se mueve en horizontal
 				if(this.entorno.alto()/4 != this.jefeFinal.getY()) {
 					this.jefeFinal.moverHorizontal();
 				}else {
 					this.jefeFinal.moverVertical();
-				}
+				}//Cuando el jefe toque el borde de la pantalla se invierte su movimiento en vertical
 				if(RebotarJefe(this.jefeFinal)) {
 					this.jefeFinal.InvertirMoverVetical();
-				}
+				} //Cuando muere el jefe final automaticamente ganas el juego
 				if(this.vidaJefe<=0 ) {
 					this.jefeFinal=null;
 					this.score = 10000;
@@ -300,6 +309,7 @@ public class Juego extends InterfaceJuego
 					this.Cohete =null; // el objeto se elimina
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
+					Herramientas.play("ost/Cohete.wav");
 					this.score +=50;
 					
 				}//Colision cohete a Nave	
@@ -307,6 +317,7 @@ public class Juego extends InterfaceJuego
 					this.Cohete =null; // el objeto se elimina
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
+					Herramientas.play("ost/Cohete.wav");
 					this.score +=150;
 					this.cantEliminados +=1;
 				}//Colision cohete a BOSS FINAL	
@@ -315,6 +326,7 @@ public class Juego extends InterfaceJuego
 					this.Cohete =null; // el objeto se elimina
 					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,4,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
+					Herramientas.play("ost/Cohete.wav");
 				}
 				
 					
@@ -328,6 +340,7 @@ public class Juego extends InterfaceJuego
 					
 					//Colision Asteroides a Astro-MegaShip
 				if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
+					Herramientas.play("ost/Ion.wav");
 					this.vida -= 1;
 					
 				
@@ -687,6 +700,13 @@ public class Juego extends InterfaceJuego
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{
-		Juego juego = new Juego();
+		int inicio = JOptionPane.showConfirmDialog(null, "¿Estás listo para acabar con esta amenaza? \n                               Presiona YES para comenzar \n \n INSTRUCTIVO: \n Presionando las tecla flechas de movimiento para moverte de izquierda a derecha \n Presionando la tecla SPACE: La nave dispara un proyectil \n   El juego termina al si no mueres o alcanzas los 10000 puntos \n    Si te enfrentas y ganas a la nave nodriza ganas automaticamente    \n                                      DISFRUTEN EL JUEGO \n                               \n","Simulador Lost Galaxian",JOptionPane.YES_OPTION);
+		if (inicio==0) {
+			Juego juego = new Juego();
+			}
+		else {
+			System.exit(0);
+			}
+		
 	}
 }

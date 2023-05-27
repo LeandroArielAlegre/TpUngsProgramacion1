@@ -28,7 +28,7 @@ public class Boss {
 	
 	// Dibuja el boss
 	void dibujarBoss(Entorno entorno) {
-		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, Color.blue);
+		entorno.dibujarRectangulo(this.x, this.y, this.ancho, this.alto, 0, invisible);
 		}
 		void dibujarImagenBoss(Entorno entorno) {
 			entorno.dibujarImagen(this.boss, this.x, this.y, 0,0.3);
