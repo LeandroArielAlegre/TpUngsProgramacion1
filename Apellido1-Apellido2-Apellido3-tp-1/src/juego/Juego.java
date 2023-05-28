@@ -55,6 +55,8 @@ public class Juego extends InterfaceJuego
 	private Image explosion;
 	private ArrayList<Explosion> explosiones;
 	
+	private Proyectil disparoJefe;
+	
 	private Random Xrand;
     private Random Direccionrand ;
 
@@ -71,7 +73,7 @@ public class Juego extends InterfaceJuego
 		
 		// Inicializar lo que haga falta para el juego
 		this.miNave = new Nave(400, 500, 60, 60);
-		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),10,10,5,Color.RED);
+		this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),15,15,5,Color.RED);
 		this.Disparado = true;
 		
 		
@@ -106,6 +108,9 @@ public class Juego extends InterfaceJuego
 		//JEFE FINAL
 		this.aparicionJefe = true;
 		
+		
+		
+		
 		//explosion
 		this.explosion =Herramientas.cargarImagen("imagenes/explosion.gif");
 		explosiones = new ArrayList<>();
@@ -127,7 +132,7 @@ public class Juego extends InterfaceJuego
 		this.itemVida = new item(200,1, 40, 40);
 		
 		// DETERMINA LA CANTIDAD DE ENEMIGOS MAXIMOS POR PARTIDA
-		this.CantidadEnemigos = 5;
+		this.CantidadEnemigos = 2;
 		
 		//vidas
 		this.vida = 100;
@@ -209,6 +214,29 @@ public class Juego extends InterfaceJuego
 					this.jefeFinal=null; //JEFE ELIMINADO
 					this.score = 10000; //GANAS AUTOMATICAMENTE
 				}
+					 // si colisiona con la nave
+					if(this.disparoJefe==null) {
+						this.disparoJefe = new Proyectil(this.jefeFinal.getX(), this.jefeFinal.getY(), 30, 30, 5,Color.BLUE);
+						
+						
+					}else {
+						this.disparoJefe.moverAbajo();
+						this.disparoJefe.dibujarProyectil(entorno);
+						this.disparoJefe.dibujarImagenIones( entorno);
+						
+						
+					}
+					if (this.disparoJefe != null) { // si sale de la pantalla
+					    if (this.disparoJefe.getY() >= this.entorno.alto()) {
+					        this.disparoJefe = null;
+					    }
+					    
+	
+					}
+					
+					
+				
+				
 				
 				
 			}
@@ -253,22 +281,24 @@ public class Juego extends InterfaceJuego
 				//Disparo naveEnemiga
 				
 				for(int i=0; i<Listaiones.length;i++) {
-					colisiondeIones(Listaiones); // si colisiona con la nave
+					 // si colisiona con la nave
 					if(this.Listaiones[i]==null) {
 						generarIones(i); // Si es null crea un objeto iones
+						colisiondeIones(this.Listaiones);
 						
 					}else {
 						this.Listaiones[i].moverAbajo();
 						this.Listaiones[i].dibujarProyectil(entorno);
 						this.Listaiones[i].dibujarImagenIones( entorno);
+						
 					}
 					if (this.Listaiones[i] != null) { // si sale de la pantalla
 					    if (this.Listaiones[i].getY() >= this.entorno.alto()) {
 					        this.Listaiones[i] = null;
 					    }
 					    
-					}
 	
+					}
 					
 					
 				}
@@ -328,7 +358,7 @@ public class Juego extends InterfaceJuego
 					//Colision cohete a asteroide	
 				}if(colisionaAsteroideCohete(this.listaAsteroides, this.Cohete)) {
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),15,15,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 					this.score +=50;
@@ -336,7 +366,7 @@ public class Juego extends InterfaceJuego
 				}//Colision cohete a Nave	
 				if(colisionCoheteNave(this.ListaNaves)) {
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),15,15,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 					this.score +=150;
@@ -345,7 +375,7 @@ public class Juego extends InterfaceJuego
 				if(colisionCoheteJefe(this.jefeFinal)) {
 					this.vidaJefe -=50;
 					this.Cohete =null; // el objeto se elimina
-					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),20,20,5,Color.RED); //se crea uno nuevo
+					this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),15,15,5,Color.RED); //se crea uno nuevo
 					this.Disparado = true;
 					Herramientas.play("ost/Cohete.wav");
 				}
@@ -353,13 +383,13 @@ public class Juego extends InterfaceJuego
 				 //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 					if(this.Cohete.getY()==0) { //Cuando el Cohete sale de la pantalla se puede volver a disparar y no le pega a nada
 						this.Cohete =null; // el objeto se elimina
-						this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),10,10,5,Color.RED); //se crea uno nuevo
+						this.Cohete = new Proyectil (this.miNave.getX(),this.miNave.getY(),15,15,5,Color.RED); //se crea uno nuevo
 						this.Disparado = true;
 						
 					}
 					
 					//Colision Asteroides a Astro-MegaShip
-				if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves)) {
+				if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves) || colisiondeIonesJefe(this.disparoJefe)) {
 					Herramientas.play("ost/Ion.wav");
 					this.miNave.dibujarImagenNaveDaño(entorno);
 					this.vida -= 1;
@@ -480,18 +510,46 @@ public class Juego extends InterfaceJuego
 	                iones[i].getY() < miNave.getY() + miNave.getAlto() &&
 	                iones[i].getY() + iones[i].getAlto() > miNave.getY()) {
 	            	
-	            	int xNaveEnemiga = this.ListaNaves[i].getX();
-	            	int YNaveEnemiga = this.ListaNaves[i].getY();
+	            	if(this.ListaNaves[i] !=null) {
+	            		int xNaveEnemiga = this.ListaNaves[i].getX();
+		            	int YNaveEnemiga = this.ListaNaves[i].getY();
+		            	this.Listaiones[i]= null;
+						this.Listaiones[i] = new Proyectil(xNaveEnemiga, YNaveEnemiga, 30, 30, 5,Color.BLUE);
+						return true; // Hay una colisión
+	            	}
 	            	
-	            	this.Listaiones[i]= null;
-					this.Listaiones[i] = new Proyectil(xNaveEnemiga, YNaveEnemiga, 30, 30, 5,Color.BLUE);
-	                return true; // Hay una colisión
+	                
 	            }
 			}
 		}
         
         return false; // No hay colisión
     }
+	
+	//Colision Disparo de iones del jefe a Astro-MegaShip 
+		public boolean colisiondeIonesJefe(Proyectil iones) {
+	        // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
+				if (iones != null) {
+		            if (iones.getX() < miNave.getX() + miNave.getAncho() &&
+		                iones.getX() + iones.getAncho() > miNave.getX() &&
+		                iones.getY() < miNave.getY() + miNave.getAlto() &&
+		                iones.getY() + iones.getAlto() > miNave.getY()) {
+		            	
+		            	if(this.jefeFinal !=null) {
+			            	this.disparoJefe= null;
+							this.disparoJefe= new Proyectil(this.jefeFinal.getX(), this.jefeFinal.getY(), 30, 30, 5,Color.BLUE);
+							return true; // Hay una colisión
+		            	}
+		            	
+		                
+		            
+				}
+			}
+	        
+	        return false; // No hay colisión
+	    }
+	
+	
 	
 	public boolean colisionaAsteroideCohete(Asteroides[] asteroide, Proyectil cohete) {
         // Verificar si hay una colisión comparando las coordenadas y tamaños de los objetos
@@ -667,18 +725,9 @@ public class Juego extends InterfaceJuego
 			 this.Listaiones[i] = new Proyectil(this.ListaNaves[i].getX(), this.ListaNaves[i].getY(), 30, 30, 5,Color.BLUE);
 		}
 		
-		//En caso de Aparecer el BOSS, EL boss disparara proyectiles de iones
-		
-		if(this.aparicionJefe ==false) {
-			this.Listaiones[i] = new Proyectil(this.jefeFinal.getX(), this.jefeFinal.getY(), 30, 30, 5,Color.BLUE);
-			
-				
-			
-			
-		}
-	 
 	    
 	}
+	
 	
 	
 	//explosion
