@@ -21,21 +21,9 @@ public class Juego extends InterfaceJuego
 	
 	// Variables y métodos propios de cada grupo
 	private Nave miNave;
-	private Asteroides Asteroide1;
-	private Asteroides Asteroide2;
-	private Asteroides Asteroide3;
-	private Asteroides Asteroide4;
 	private Asteroides[] listaAsteroides;
 	private Proyectil Cohete;
-	private Proyectil iones1;
-	private Proyectil iones2;
-	private Proyectil iones3;
-	private Proyectil iones4;
 	private Proyectil[] Listaiones;
-	private navesDestructoras NaveEnemiga1;
-	private navesDestructoras NaveEnemiga2;
-	private navesDestructoras NaveEnemiga3;
-	private navesDestructoras NaveEnemiga4;
 	private navesDestructoras[] ListaNaves;
 	private Boss jefeFinal;
 	private boolean aparicionJefe;
@@ -81,29 +69,27 @@ public class Juego extends InterfaceJuego
 		
 		// Asteroides
 		
-		
-		this.Asteroide1 = new Asteroides(100,1, 40, 1);
-		this.Asteroide2 = new Asteroides(200,1, 40, 1);
-		this.Asteroide3 = new Asteroides(400,1, 40, -1);
-		this.Asteroide4 = new Asteroides(500,1, 40, -1);
-		this.listaAsteroides =  new Asteroides[]{this.Asteroide1,this.Asteroide2, this.Asteroide3, this.Asteroide4};
-		
+
+		this.listaAsteroides =  new Asteroides[4];
+		this.listaAsteroides[0] =  new Asteroides(100,1, 40, 1);
+		this.listaAsteroides[1] =  new Asteroides(200,1, 40, 1);
+		this.listaAsteroides[2] =  new Asteroides(400,1, 40, -1);
+		this.listaAsteroides[3] =  new Asteroides(500,1, 40, -1);
 		
 		// Destructores Estelares (naves enemigas)
-		this.NaveEnemiga1 = new navesDestructoras(650,1,30,30,-1);
-		this.NaveEnemiga2 = new navesDestructoras(450,1,30,30,-1);
-		this.NaveEnemiga3 = new navesDestructoras(250,1,30,30,-1);
-		this.NaveEnemiga4 = new navesDestructoras(150,1,30,30,-1);
-		this.ListaNaves = new navesDestructoras[] {this.NaveEnemiga1, this.NaveEnemiga2, this.NaveEnemiga3, this.NaveEnemiga4};
-		
+		this.ListaNaves = new navesDestructoras[4];
+		this.ListaNaves [0] = new navesDestructoras(650,1,30,30,-1);
+		this.ListaNaves [1] = new navesDestructoras(450,1,30,30,-1);
+		this.ListaNaves [2] = new navesDestructoras(250,1,30,30,-1);
+		this.ListaNaves [3] = new navesDestructoras(150,1,30,30,-1);
 
 
 		//Disparo de naves enemigas
-		this.iones1 = new Proyectil(this.NaveEnemiga1.getX(),this.NaveEnemiga1.getY(),30,30,5,Color.BLUE);
-		this.iones2 = new Proyectil(this.NaveEnemiga2.getX(),this.NaveEnemiga2.getY(),30,30,5,Color.BLUE);
-		this.iones3 = new Proyectil(this.NaveEnemiga3.getX(),this.NaveEnemiga3.getY(),30,30,5,Color.BLUE);
-		this.iones4 = new Proyectil(this.NaveEnemiga4.getX(),this.NaveEnemiga4.getY(),30,30,5,Color.BLUE);
-		this.Listaiones= new Proyectil[] {this.iones1,this.iones2,this.iones3,this.iones4};
+		this.Listaiones= new Proyectil[4];
+		this.Listaiones[0] = new Proyectil(this.ListaNaves[0].getX(),this.ListaNaves[0].getY(),30,30,5,Color.BLUE);
+		this.Listaiones[1] = new Proyectil(this.ListaNaves[1].getX(),this.ListaNaves[1].getY(),30,30,5,Color.BLUE);
+		this.Listaiones[2] = new Proyectil(this.ListaNaves[2].getX(),this.ListaNaves[2].getY(),30,30,5,Color.BLUE);
+		this.Listaiones[3] = new Proyectil(this.ListaNaves[3].getX(),this.ListaNaves[3].getY(),30,30,5,Color.BLUE);
 		
 		//JEFE FINAL
 		this.aparicionJefe = true;
@@ -132,7 +118,7 @@ public class Juego extends InterfaceJuego
 		this.itemVida = new item(200,1, 40, 40);
 		
 		// DETERMINA LA CANTIDAD DE ENEMIGOS MAXIMOS POR PARTIDA
-		this.CantidadEnemigos = 2;
+		this.CantidadEnemigos = 10;
 		
 		//vidas
 		this.vida = 100;
@@ -392,7 +378,7 @@ public class Juego extends InterfaceJuego
 				if(colisionaAsteroideNave(listaAsteroides) || colisiondeIones(Listaiones) || colisionNaveEnemigaANave(ListaNaves) || colisiondeIonesJefe(this.disparoJefe)) {
 					Herramientas.play("ost/Ion.wav");
 					this.miNave.dibujarImagenNaveDaño(entorno);
-					this.vida -= 1;
+					this.vida -= 5;
 					
 				
 					
